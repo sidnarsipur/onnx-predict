@@ -32,6 +32,7 @@ NODE_COUNTS_CSV="${RUN_DIR}/node_counts.csv"
 RESULTS_CSV="${RUN_DIR}/inference_results.csv"
 RESULTS_LOG="${RUN_DIR}/inference_results.log"
 ARTIFACTS_TXT="${RUN_DIR}/artifacts.txt"
+ENV_TXT="${RUN_DIR}/env.txt"
 
 mkdir -p "${RUN_DIR}"
 rm -rf "${RUN_DIR}/download_tmp" "${RUN_DIR}/.hf_home" "${RUN_DIR}/.hf_cache"
@@ -64,29 +65,23 @@ collect_artifacts() {
   set +e
 
   {
-    echo
-    echo "===== run_summary ====="
     echo "timestamp=$(date --iso-8601=seconds)"
-    echo "hostname=$(hostname)"
     echo "job_id=${JOB_ID}"
-    echo "job_name=${SLURM_JOB_NAME:-}"
     echo "run_label=${RUN_LABEL}"
     echo "exit_code=${exit_code}"
-    echo "script_dir=${SCRIPT_DIR}"
-    echo "run_dir=${RUN_DIR}"
-    echo "conda_env=${ENV_NAME}"
-    echo "python_bin=$(command -v python 2>/dev/null || true)"
-    echo "node_counts_csv=${NODE_COUNTS_CSV}"
-    echo "results_csv=${RESULTS_CSV}"
-    echo "results_log=${RESULTS_LOG}"
-  } >> "${ARTIFACTS_TXT}"
+    echo "memory_from_slurm=${SLURM_MEM_PER_NODE:-${SLURM_MEM_PER_CPU:-${SLURM_MEM_PER_GPU:-}}}"
+    echo "slurm_mem_per_node=${SLURM_MEM_PER_NODE:-}"
+    echo "slurm_mem_per_cpu=${SLURM_MEM_PER_CPU:-}"
+    echo "slurm_mem_per_gpu=${SLURM_MEM_PER_GPU:-}"
+  } > "${ENV_TXT}"
 
+  : > "${ARTIFACTS_TXT}"
+  append_section "run_context" bash -c 'echo "hostname=$(hostname)"; echo "job_id='"${JOB_ID}"'"; echo "job_name=${SLURM_JOB_NAME:-}"; echo "run_label='"${RUN_LABEL}"'"; echo "exit_code='"${exit_code}"'"; echo "script_dir='"${SCRIPT_DIR}"'"; echo "run_dir='"${RUN_DIR}"'"; echo "conda_env='"${ENV_NAME}"'"; echo "python_bin=$(command -v python 2>/dev/null || true)"; echo "node_counts_csv='"${NODE_COUNTS_CSV}"'"; echo "results_csv='"${RESULTS_CSV}"'"; echo "results_log='"${RESULTS_LOG}"'"'
   append_section "uname" uname -a
   append_section "lscpu" lscpu
   append_section "cpuinfo" cat /proc/cpuinfo
   append_section "meminfo" cat /proc/meminfo
   append_section "disk_usage" df -h
-  append_section "environment" env
   append_section "python_version" python --version
   append_section "pip_freeze" python -m pip freeze
 
@@ -95,9 +90,6 @@ collect_artifacts() {
     append_section "sacct" sacct -j "${SLURM_JOB_ID}" --format=JobID,JobName,Partition,AllocCPUS,State,ExitCode,Elapsed,MaxRSS,MaxVMSize
     append_section "seff" seff "${SLURM_JOB_ID}"
   fi
-
-  append_section "result_file_stats" wc -l "${RESULTS_CSV}" "${RESULTS_LOG}" "${NODE_COUNTS_CSV}"
-  append_section "recent_progress" tail -20 "${RESULTS_LOG}"
 
   rm -rf "${RUN_DIR}/download_tmp" "${RUN_DIR}/.hf_home" "${RUN_DIR}/.hf_cache"
 
