@@ -92,7 +92,6 @@ fi
 
 export HF_HOME="${SCRIPT_DIR}/.hf_home"
 export HF_HUB_CACHE="${SCRIPT_DIR}/.hf_cache"
-export OMP_NUM_THREADS="${OMP_NUM_THREADS:-${SLURM_CPUS_PER_TASK:-1}}"
 
 python "${SCRIPT_DIR}/run_inference.py" \
   --node-counts "${NODE_COUNTS_CSV}" \
