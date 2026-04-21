@@ -11,6 +11,7 @@ set -uo pipefail
 SCRIPT_DIR="$(cd "${SLURM_SUBMIT_DIR:-$(pwd)}" && pwd)"
 PROJECT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 ENV_NAME="${ENV_NAME:-onnx-inference}"
+NODE_COUNTS_CSV="${NODE_COUNTS_CSV:-${SCRIPT_DIR}/node_counts.csv}"
 RUN_ID="${SLURM_JOB_ID:-local}_$(date +%Y%m%d_%H%M%S)"
 ARTIFACT_DIR="${SCRIPT_DIR}/artifacts/run_${RUN_ID}"
 LOG_DIR="${ARTIFACT_DIR}/logs"
@@ -30,6 +31,10 @@ collect_artifacts() {
     echo "job_name=${SLURM_JOB_NAME:-}"
     echo "exit_code=${exit_code}"
     echo "project_dir=${PROJECT_DIR}"
+    echo "script_dir=${SCRIPT_DIR}"
+    echo "conda_env=${ENV_NAME}"
+    echo "python_bin=$(command -v python 2>/dev/null || true)"
+    echo "node_counts_csv=${NODE_COUNTS_CSV}"
     echo "artifact_dir=${ARTIFACT_DIR}"
   } > "${ARTIFACT_DIR}/run_summary.txt"
 
@@ -56,7 +61,7 @@ collect_artifacts() {
   cp "${SCRIPT_DIR}/inference_results.csv" "${DATA_DIR}/" 2>/dev/null || true
   cp "${SCRIPT_DIR}/inference_progress.log" "${DATA_DIR}/" 2>/dev/null || true
   cp "${SCRIPT_DIR}/inference_errors.log" "${DATA_DIR}/" 2>/dev/null || true
-  cp "${PROJECT_DIR}/node_counts.csv" "${DATA_DIR}/" 2>/dev/null || true
+  cp "${NODE_COUNTS_CSV}" "${DATA_DIR}/" 2>/dev/null || true
 
   echo "Artifacts collected in ${ARTIFACT_DIR}"
   exit "${exit_code}"
@@ -79,12 +84,18 @@ CONDA_BASE="$(conda info --base)"
 source "${CONDA_BASE}/etc/profile.d/conda.sh"
 conda activate "${ENV_NAME}"
 
+if [[ ! -f "${NODE_COUNTS_CSV}" ]]; then
+  echo "node_counts.csv not found: ${NODE_COUNTS_CSV}" >&2
+  echo "Set NODE_COUNTS_CSV=/path/to/node_counts.csv when submitting if needed." >&2
+  exit 1
+fi
+
 export HF_HOME="${SCRIPT_DIR}/.hf_home"
 export HF_HUB_CACHE="${SCRIPT_DIR}/.hf_cache"
 export OMP_NUM_THREADS="${OMP_NUM_THREADS:-${SLURM_CPUS_PER_TASK:-1}}"
 
 python "${SCRIPT_DIR}/run_inference.py" \
-  --node-counts "${PROJECT_DIR}/node_counts.csv" \
+  --node-counts "${NODE_COUNTS_CSV}" \
   --output "${SCRIPT_DIR}/inference_results.csv" \
   --progress-log "${SCRIPT_DIR}/inference_progress.log" \
   --error-log "${SCRIPT_DIR}/inference_errors.log" \
