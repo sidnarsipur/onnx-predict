@@ -10,6 +10,7 @@ import shutil
 import statistics
 import tempfile
 import time
+import urllib.request
 from collections import OrderedDict
 from dataclasses import dataclass
 from datetime import datetime
@@ -18,7 +19,7 @@ from pathlib import Path
 import numpy as np
 import onnx
 import onnxruntime as ort
-from huggingface_hub import HfApi, hf_hub_download
+from huggingface_hub import HfApi, hf_hub_url
 from onnx import checker, version_converter
 
 TARGET_OPSET = 21
@@ -77,18 +78,13 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--progress-log",
-        default="inference_progress.log",
+        default="inference_results.log",
         help="Progress log used to resume interrupted runs.",
     )
     parser.add_argument(
-        "--error-log",
-        default="inference_errors.log",
-        help="One-line error log for failed model variants.",
-    )
-    parser.add_argument(
         "--hf-cache",
-        default=".hf_cache",
-        help="Local Hugging Face cache directory.",
+        default="",
+        help="Temporary download directory. Defaults to a temporary directory.",
     )
     parser.add_argument("--warmup", type=int, default=5, help="Warm-up inference runs.")
     parser.add_argument("--samples", type=int, default=10, help="Timed inference samples.")
@@ -192,36 +188,28 @@ def find_repo_file(api: HfApi, entry: ModelEntry) -> str:
     raise RuntimeError(f"Could not find {entry.base_model_name} in {entry.repo_id}")
 
 
-def download_model(entry: ModelEntry, repo_file: str, hf_cache: Path) -> Path:
-    hf_cache.mkdir(parents=True, exist_ok=True)
-    return Path(
-        hf_hub_download(
-            repo_id=entry.repo_id,
-            filename=repo_file,
-            repo_type="model",
-            cache_dir=hf_cache,
-        )
-    )
+def download_model(entry: ModelEntry, repo_file: str, download_dir: Path) -> Path:
+    download_dir.mkdir(parents=True, exist_ok=True)
+    destination_path = download_dir / entry.base_model_name
+    temp_path = destination_path.with_suffix(f"{destination_path.suffix}.part")
+    url = hf_hub_url(repo_id=entry.repo_id, filename=repo_file, repo_type="model")
 
-
-def delete_downloaded_model(model_path: Path, hf_cache: Path) -> None:
-    if model_path.exists():
-        model_path.unlink()
-
-    snapshot_dir = model_path.parent
-    if snapshot_dir.name and snapshot_dir.parent.name == "snapshots":
-        shutil.rmtree(snapshot_dir, ignore_errors=True)
-
+    temp_path.unlink(missing_ok=True)
+    destination_path.unlink(missing_ok=True)
     try:
-        relative_parts = model_path.relative_to(hf_cache).parts
-    except ValueError:
-        return
+        with urllib.request.urlopen(url) as response, temp_path.open("wb") as handle:
+            shutil.copyfileobj(response, handle)
+        temp_path.replace(destination_path)
+    except Exception:
+        temp_path.unlink(missing_ok=True)
+        destination_path.unlink(missing_ok=True)
+        raise
 
-    if relative_parts:
-        repo_cache_dir = hf_cache / relative_parts[0]
-        blobs_dir = repo_cache_dir / "blobs"
-        if blobs_dir.exists():
-            shutil.rmtree(blobs_dir, ignore_errors=True)
+    return destination_path
+
+
+def delete_downloaded_model(model_path: Path) -> None:
+    model_path.unlink(missing_ok=True)
 
 
 def convert_to_target_opset(model_path: Path, output_path: Path) -> Path:
@@ -392,7 +380,6 @@ def process_entry(
     providers: list[str],
     output_path: Path,
     progress_log: Path,
-    error_log: Path,
 ) -> None:
     with tempfile.TemporaryDirectory() as temp_dir_name:
         converted_path = Path(temp_dir_name) / entry.base_model_name
@@ -418,11 +405,10 @@ def main() -> int:
     node_counts_path = resolve_path(args.node_counts, script_dir)
     output_path = resolve_path(args.output, script_dir)
     progress_log = resolve_path(args.progress_log, script_dir)
-    error_log = resolve_path(args.error_log, script_dir)
-    hf_cache = resolve_path(args.hf_cache, script_dir)
+    download_dir = resolve_path(args.hf_cache, script_dir) if args.hf_cache else Path(tempfile.mkdtemp())
 
-    os.environ["HF_HOME"] = str(script_dir / ".hf_home")
-    os.environ["HF_HUB_CACHE"] = str(hf_cache)
+    os.environ.setdefault("HF_HOME", str(download_dir / ".hf_home"))
+    os.environ.setdefault("HF_HUB_CACHE", str(download_dir / ".hf_cache"))
 
     entries = read_model_entries(node_counts_path, args.repo_prefix)
     completed = read_completed_models(progress_log)
@@ -436,13 +422,12 @@ def main() -> int:
         source_model_path: Path | None = None
         try:
             repo_file = find_repo_file(api, group[0])
-            source_model_path = download_model(group[0], repo_file, hf_cache)
+            source_model_path = download_model(group[0], repo_file, download_dir)
         except Exception as exc:
             for entry in group:
                 row = failure_row(entry, repo_file, str(exc))
                 append_output_row(output_path, row)
                 append_log(progress_log, "FAILED", entry.model_name, str(exc))
-                append_log(error_log, "FAILED", entry.model_name, str(exc))
             continue
 
         for entry in group:
@@ -456,16 +441,17 @@ def main() -> int:
                     providers,
                     output_path,
                     progress_log,
-                    error_log,
                 )
             except Exception as exc:
                 row = failure_row(entry, repo_file, str(exc))
                 append_output_row(output_path, row)
                 append_log(progress_log, "FAILED", entry.model_name, str(exc))
-                append_log(error_log, "FAILED", entry.model_name, str(exc))
                 print(f"Failed {entry.model_name}: {one_line(str(exc))}", flush=True)
 
-        delete_downloaded_model(source_model_path, hf_cache)
+        delete_downloaded_model(source_model_path)
+
+    if not args.hf_cache:
+        shutil.rmtree(download_dir, ignore_errors=True)
 
     return 0
 
