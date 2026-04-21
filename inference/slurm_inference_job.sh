@@ -111,21 +111,25 @@ else
   echo "Starting a fresh run log at ${RESULTS_LOG}"
 fi
 
-if ! command -v conda >/dev/null 2>&1; then
-  echo "conda was not found on PATH. Load your conda module before submitting this job." >&2
+PYTHON_BIN="python"
+if command -v conda >/dev/null 2>&1; then
+  CONDA_BASE="$(conda info --base)"
+  # shellcheck disable=SC1091
+  source "${CONDA_BASE}/etc/profile.d/conda.sh"
+  conda activate "${ENV_NAME}"
+elif [[ -x "${ENV_NAME}/bin/python" ]]; then
+  PYTHON_BIN="${ENV_NAME}/bin/python"
+else
+  echo "conda was not found on PATH and ENV_NAME is not a usable env path: ${ENV_NAME}" >&2
+  echo "Set ENV_NAME=/path/to/conda/env or load the conda module before running this script." >&2
   exit 1
 fi
-
-CONDA_BASE="$(conda info --base)"
-# shellcheck disable=SC1091
-source "${CONDA_BASE}/etc/profile.d/conda.sh"
-conda activate "${ENV_NAME}"
 
 export HF_HOME="${RUN_DIR}/.hf_home"
 export HF_HUB_CACHE="${RUN_DIR}/.hf_cache"
 export ORT_INTRA_OP_NUM_THREADS
 
-python "${SCRIPT_DIR}/run_inference.py" \
+"${PYTHON_BIN}" "${SCRIPT_DIR}/run_inference.py" \
   --node-counts "${NODE_COUNTS_CSV}" \
   --output "${RESULTS_CSV}" \
   --progress-log "${RESULTS_LOG}" \
