@@ -27,7 +27,7 @@ fi
 
 ENV_NAME="${ENV_NAME:-onnx-inference}"
 JOB_ID="${SLURM_JOB_ID:-local}"
-ORT_INTER_OP_NUM_THREADS="${ORT_INTER_OP_NUM_THREADS:-0}"
+ORT_INTRA_OP_NUM_THREADS="${ORT_INTRA_OP_NUM_THREADS:-0}"
 RUN_DIR="${SCRIPT_DIR}/logs/${RUN_LABEL}"
 NODE_COUNTS_CSV="${RUN_DIR}/node_counts.csv"
 RESULTS_CSV="${RUN_DIR}/inference_results.csv"
@@ -74,7 +74,7 @@ collect_artifacts() {
     echo "slurm_mem_per_node=${SLURM_MEM_PER_NODE:-}"
     echo "slurm_mem_per_cpu=${SLURM_MEM_PER_CPU:-}"
     echo "slurm_mem_per_gpu=${SLURM_MEM_PER_GPU:-}"
-    echo "inter_threads=${ORT_INTER_OP_NUM_THREADS}"
+    echo "intra_threads=${ORT_INTRA_OP_NUM_THREADS}"
   } > "${ENV_TXT}"
 
   : > "${ARTIFACTS_TXT}"
@@ -123,13 +123,13 @@ conda activate "${ENV_NAME}"
 
 export HF_HOME="${RUN_DIR}/.hf_home"
 export HF_HUB_CACHE="${RUN_DIR}/.hf_cache"
-export ORT_INTER_OP_NUM_THREADS
+export ORT_INTRA_OP_NUM_THREADS
 
 python "${SCRIPT_DIR}/run_inference.py" \
   --node-counts "${NODE_COUNTS_CSV}" \
   --output "${RESULTS_CSV}" \
   --progress-log "${RESULTS_LOG}" \
   --hf-cache "${RUN_DIR}/download_tmp" \
-  --inter-op-num-threads "${ORT_INTER_OP_NUM_THREADS}"
+  --intra-op-num-threads "${ORT_INTRA_OP_NUM_THREADS}"
 
 echo "Finished ONNX inference job at $(date --iso-8601=seconds)"

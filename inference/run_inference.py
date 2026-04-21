@@ -91,10 +91,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--warmup", type=int, default=5, help="Warm-up inference runs.")
     parser.add_argument("--samples", type=int, default=10, help="Timed inference samples.")
     parser.add_argument(
-        "--inter-op-num-threads",
+        "--intra-op-num-threads",
         type=int,
-        default=int(os.environ.get("ORT_INTER_OP_NUM_THREADS", "0")),
-        help="ONNX Runtime inter-op thread count. Use 0 for ONNX Runtime default.",
+        default=int(os.environ.get("ORT_INTRA_OP_NUM_THREADS", "0")),
+        help="ONNX Runtime intra-op thread count. Use 0 for ONNX Runtime default.",
     )
     parser.add_argument(
         "--repo-prefix",
@@ -254,11 +254,11 @@ def create_session(
     model_path: Path,
     optimization_level: ort.GraphOptimizationLevel,
     providers: list[str],
-    inter_op_num_threads: int,
+    intra_op_num_threads: int,
 ) -> ort.InferenceSession:
     options = ort.SessionOptions()
     options.graph_optimization_level = optimization_level
-    options.inter_op_num_threads = inter_op_num_threads
+    options.intra_op_num_threads = intra_op_num_threads
     return ort.InferenceSession(
         str(model_path),
         sess_options=options,
@@ -408,7 +408,7 @@ def process_entry(
             converted_path,
             entry.optimization_level,
             providers,
-            args.inter_op_num_threads,
+            args.intra_op_num_threads,
         )
         inputs = make_inputs(session)
         samples = time_inference(session, inputs, args.warmup, args.samples)
@@ -441,7 +441,7 @@ def main() -> int:
     api = HfApi()
     providers = choose_providers()
     print(f"Using ONNX Runtime providers: {', '.join(providers)}", flush=True)
-    print(f"Using ONNX Runtime inter-op threads: {args.inter_op_num_threads}", flush=True)
+    print(f"Using ONNX Runtime intra-op threads: {args.intra_op_num_threads}", flush=True)
 
     for group in grouped_entries.values():
         repo_file = ""
