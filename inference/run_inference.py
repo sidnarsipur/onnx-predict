@@ -93,13 +93,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--intra-op-num-threads",
         type=int,
-        default=int(os.environ.get("ORT_INTRA_OP_NUM_THREADS", "1")),
+        default=int(os.environ.get("ORT_INTRA_OP_NUM_THREADS", "0")),
         help="ONNX Runtime intra-op thread count.",
     )
     parser.add_argument(
         "--inter-op-num-threads",
         type=int,
-        default=int(os.environ.get("ORT_INTER_OP_NUM_THREADS", "1")),
+        default=int(os.environ.get("ORT_INTER_OP_NUM_THREADS", "0")),
         help="ONNX Runtime inter-op thread count.",
     )
     parser.add_argument(
