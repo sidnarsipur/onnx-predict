@@ -32,6 +32,8 @@ VARIANT_SUFFIXES = {
     "_enable_all.onnx": ("enable_all", ort.GraphOptimizationLevel.ORT_ENABLE_ALL),
     "_all.onnx": ("enable_all", ort.GraphOptimizationLevel.ORT_ENABLE_ALL),
 }
+DEFAULT_VARIANT = "default"
+DEFAULT_OPTIMIZATION_LEVEL = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
 CPU_PROVIDER = "CPUExecutionProvider"
 SAMPLE_COLUMNS = [f"sample_{index}_ms" for index in range(1, 11)]
 OUTPUT_COLUMNS = [
@@ -144,8 +146,18 @@ def parse_model_name(model_name: str, repo_prefix: str) -> ModelEntry:
                 variant_name=variant_name,
                 optimization_level=optimization_level,
             )
-    else:
-        raise ValueError(f"Skipping non-optimized model row: {model_name}")
+
+    if model_name.endswith(".onnx"):
+        repo_id = f"{repo_prefix}/{Path(model_name).stem}"
+        return ModelEntry(
+            model_name=model_name,
+            base_model_name=model_name,
+            repo_id=repo_id,
+            variant_name=DEFAULT_VARIANT,
+            optimization_level=DEFAULT_OPTIMIZATION_LEVEL,
+        )
+
+    raise ValueError(f"Skipping non-ONNX model row: {model_name}")
 
 
 def read_model_entries(node_counts_path: Path, repo_prefix: str) -> list[ModelEntry]:

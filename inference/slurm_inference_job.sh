@@ -34,6 +34,7 @@ RESULTS_LOG="${RUN_DIR}/inference_results.log"
 ARTIFACTS_TXT="${RUN_DIR}/artifacts.txt"
 
 mkdir -p "${RUN_DIR}"
+rm -rf "${RUN_DIR}/download_tmp" "${RUN_DIR}/.hf_home" "${RUN_DIR}/.hf_cache"
 
 if [[ ! -f "${NODE_COUNTS_CSV}" ]]; then
   if [[ -f "${SCRIPT_DIR}/node_counts.csv" ]]; then
@@ -63,6 +64,7 @@ collect_artifacts() {
   set +e
 
   {
+    echo
     echo "===== run_summary ====="
     echo "timestamp=$(date --iso-8601=seconds)"
     echo "hostname=$(hostname)"
@@ -77,7 +79,7 @@ collect_artifacts() {
     echo "node_counts_csv=${NODE_COUNTS_CSV}"
     echo "results_csv=${RESULTS_CSV}"
     echo "results_log=${RESULTS_LOG}"
-  } > "${ARTIFACTS_TXT}"
+  } >> "${ARTIFACTS_TXT}"
 
   append_section "uname" uname -a
   append_section "lscpu" lscpu
@@ -108,6 +110,12 @@ trap collect_artifacts EXIT
 echo "Starting ONNX inference job at $(date --iso-8601=seconds)"
 echo "Run label: ${RUN_LABEL}"
 echo "Run directory: ${RUN_DIR}"
+if [[ -f "${RESULTS_LOG}" ]]; then
+  echo "Resuming from ${RESULTS_LOG}"
+  echo "Existing completed/failed entries: $(wc -l < "${RESULTS_LOG}")"
+else
+  echo "Starting a fresh run log at ${RESULTS_LOG}"
+fi
 
 if ! command -v conda >/dev/null 2>&1; then
   echo "conda was not found on PATH. Load your conda module before submitting this job." >&2
