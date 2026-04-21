@@ -239,6 +239,8 @@ def create_session(
 ) -> ort.InferenceSession:
     options = ort.SessionOptions()
     options.graph_optimization_level = optimization_level
+    options.intra_op_num_threads = 1
+    options.inter_op_num_threads = 1
     return ort.InferenceSession(
         str(model_path),
         sess_options=options,
