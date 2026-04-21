@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=onnx-inference
-#SBATCH --output=onnx_inference_%j.out
-#SBATCH --error=onnx_inference_%j.err
+#SBATCH --output=logs/onnx_inference_%j.out
+#SBATCH --error=logs/onnx_inference_%j.err
 #SBATCH --cpus-per-task=1
 #SBATCH --time=12:00:00
 #SBATCH --mem=16G
