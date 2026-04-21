@@ -1,0 +1,7 @@
+models/
+*.pyc
+*/.venv/
+venv/
+__pycache__/
+*.toml
+*.lock
