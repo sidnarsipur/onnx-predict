@@ -36,7 +36,7 @@ ARTIFACTS_TXT="${RUN_DIR}/artifacts.txt"
 ENV_TXT="${RUN_DIR}/env.txt"
 
 mkdir -p "${RUN_DIR}"
-rm -rf "${RUN_DIR}/download_tmp" "${RUN_DIR}/.hf_home" "${RUN_DIR}/.hf_cache"
+rm -rf "${RUN_DIR}/download_tmp"
 
 if [[ ! -f "${NODE_COUNTS_CSV}" ]]; then
   if [[ -f "${SCRIPT_DIR}/node_counts.csv" ]]; then
@@ -93,7 +93,7 @@ collect_artifacts() {
     append_section "seff" seff "${SLURM_JOB_ID}"
   fi
 
-  rm -rf "${RUN_DIR}/download_tmp" "${RUN_DIR}/.hf_home" "${RUN_DIR}/.hf_cache"
+  rm -rf "${RUN_DIR}/download_tmp"
 
   echo "Artifacts written to ${ARTIFACTS_TXT}"
   exit "${exit_code}"

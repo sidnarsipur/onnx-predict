@@ -8,12 +8,10 @@ NUMPY_VERSION="${NUMPY_VERSION:-1.26.4}"
 ONNX_VERSION="${ONNX_VERSION:-1.16.1}"
 ONNXRUNTIME_VERSION="${ONNXRUNTIME_VERSION:-1.20.0}"
 HUGGINGFACE_HUB_VERSION="${HUGGINGFACE_HUB_VERSION:-0.30.2}"
-HF_HOME_DIR="${SCRIPT_DIR}/.hf_home"
-HF_CACHE_DIR="${SCRIPT_DIR}/.hf_cache"
 LOG_FILE="${SCRIPT_DIR}/logs/setup_inference_env.log"
 LOCK_DIR="${SCRIPT_DIR}/.setup_lock"
 
-mkdir -p "${SCRIPT_DIR}/artifacts" "${SCRIPT_DIR}/logs" "${HF_HOME_DIR}" "${HF_CACHE_DIR}"
+mkdir -p "${SCRIPT_DIR}/artifacts" "${SCRIPT_DIR}/logs"
 exec > >(tee -a "${LOG_FILE}") 2>&1
 
 if ! mkdir "${LOCK_DIR}" 2>/dev/null; then
@@ -56,18 +54,6 @@ python -m pip install --upgrade --only-binary=:all: \
   urllib3 \
   "huggingface_hub==${HUGGINGFACE_HUB_VERSION}"
 
-mkdir -p "${CONDA_PREFIX}/etc/conda/activate.d"
-cat > "${CONDA_PREFIX}/etc/conda/activate.d/onnx_inference_env.sh" <<EOF
-export HF_HOME="${HF_HOME_DIR}"
-export HF_HUB_CACHE="${HF_CACHE_DIR}"
-EOF
-
-export HF_HOME="${HF_HOME_DIR}"
-export HF_HUB_CACHE="${HF_CACHE_DIR}"
-
-echo "Hugging Face cache:"
-echo "  HF_HOME=${HF_HOME}"
-echo "  HF_HUB_CACHE=${HF_HUB_CACHE}"
 echo "NumPy version: ${NUMPY_VERSION}"
 echo "ONNX version: ${ONNX_VERSION}"
 echo "ONNX Runtime version: ${ONNXRUNTIME_VERSION}"

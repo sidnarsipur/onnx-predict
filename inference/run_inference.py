@@ -432,9 +432,6 @@ def main() -> int:
     progress_log = resolve_path(args.progress_log, script_dir)
     download_dir = resolve_path(args.hf_cache, script_dir) if args.hf_cache else Path(tempfile.mkdtemp())
 
-    os.environ.setdefault("HF_HOME", str(download_dir / ".hf_home"))
-    os.environ.setdefault("HF_HUB_CACHE", str(download_dir / ".hf_cache"))
-
     entries = read_model_entries(node_counts_path, args.repo_prefix)
     completed = read_completed_models(progress_log)
     grouped_entries = group_entries([entry for entry in entries if entry.model_name not in completed])
