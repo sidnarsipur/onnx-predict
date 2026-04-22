@@ -69,6 +69,9 @@ collect_artifacts() {
     echo "slurm_mem_per_node=${SLURM_MEM_PER_NODE:-}"
     echo "slurm_mem_per_cpu=${SLURM_MEM_PER_CPU:-}"
     echo "slurm_mem_per_gpu=${SLURM_MEM_PER_GPU:-}"
+    echo "cores_requested=${SLURM_CPUS_PER_TASK:-${SLURM_CPUS_ON_NODE:-}}"
+    echo "slurm_cpus_per_task=${SLURM_CPUS_PER_TASK:-}"
+    echo "slurm_cpus_on_node=${SLURM_CPUS_ON_NODE:-}"
     echo "intra_threads=${ORT_INTRA_OP_NUM_THREADS}"
   } > "${ENV_TXT}"
 
