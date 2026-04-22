@@ -8,13 +8,10 @@
 
 set -uo pipefail
 
-SUBMIT_DIR="$(cd "${SLURM_SUBMIT_DIR:-$(pwd)}" && pwd)"
-if [[ -f "${SUBMIT_DIR}/run_inference.py" ]]; then
-  SCRIPT_DIR="${SUBMIT_DIR}"
-elif [[ -f "${SUBMIT_DIR}/inference/run_inference.py" ]]; then
-  SCRIPT_DIR="${SUBMIT_DIR}/inference"
-else
-  echo "Could not find run_inference.py. Submit from the inference directory or repo root." >&2
+SCRIPT_DIR="$(pwd)"
+if [[ ! -f "${SCRIPT_DIR}/run_inference.py" ]]; then
+  echo "Could not find run_inference.py in the current directory." >&2
+  echo "Run this script from the inference directory." >&2
   exit 1
 fi
 
@@ -29,6 +26,7 @@ ENV_NAME="${ENV_NAME:-onnx-inference}"
 JOB_ID="${SLURM_JOB_ID:-local}"
 ORT_INTRA_OP_NUM_THREADS="${ORT_INTRA_OP_NUM_THREADS:-0}"
 RUN_DIR="${SCRIPT_DIR}/logs/${RUN_LABEL}"
+
 NODE_COUNTS_CSV="${RUN_DIR}/node_counts.csv"
 RESULTS_CSV="${RUN_DIR}/inference_results.csv"
 RESULTS_LOG="${RUN_DIR}/inference_results.log"
@@ -39,14 +37,11 @@ mkdir -p "${RUN_DIR}"
 rm -rf "${RUN_DIR}/download_tmp"
 
 if [[ ! -f "${NODE_COUNTS_CSV}" ]]; then
-  if [[ -f "${SCRIPT_DIR}/node_counts.csv" ]]; then
-    cp "${SCRIPT_DIR}/node_counts.csv" "${NODE_COUNTS_CSV}"
-  elif [[ -f "${SCRIPT_DIR}/../node_counts.csv" ]]; then
-    cp "${SCRIPT_DIR}/../node_counts.csv" "${NODE_COUNTS_CSV}"
-  else
-    echo "node_counts.csv not found in ${SCRIPT_DIR} or ${SCRIPT_DIR}/.." >&2
+  if [[ ! -f "${SCRIPT_DIR}/node_counts.csv" ]]; then
+    echo "node_counts.csv not found in ${SCRIPT_DIR}." >&2
     exit 1
   fi
+  cp "${SCRIPT_DIR}/node_counts.csv" "${NODE_COUNTS_CSV}"
 fi
 
 exec > "${RUN_DIR}/${JOB_ID}.out" 2> "${RUN_DIR}/${JOB_ID}.err"
