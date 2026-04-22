@@ -36,6 +36,16 @@ ENV_TXT="${RUN_DIR}/env.txt"
 mkdir -p "${RUN_DIR}"
 rm -rf "${RUN_DIR}/download_tmp"
 
+PREVIOUS_INFERENCE_SECONDS="$(
+  awk -F= '$1 == "total_inference_seconds" { value = $2 } END { print value }' "${ENV_TXT}" 2>/dev/null || true
+)"
+if [[ ! "${PREVIOUS_INFERENCE_SECONDS}" =~ ^[0-9]+$ ]]; then
+  PREVIOUS_INFERENCE_SECONDS=0
+fi
+CURRENT_INFERENCE_SECONDS=0
+INFERENCE_STARTED=0
+INFERENCE_START_EPOCH=0
+
 if [[ ! -f "${NODE_COUNTS_CSV}" ]]; then
   if [[ ! -f "${SCRIPT_DIR}/node_counts.csv" ]]; then
     echo "node_counts.csv not found in ${SCRIPT_DIR}." >&2
@@ -56,9 +66,28 @@ append_section() {
   } >> "${ARTIFACTS_TXT}" 2>&1 || true
 }
 
+format_seconds() {
+  local total_seconds="$1"
+  printf "%02d:%02d:%02d" \
+    "$((total_seconds / 3600))" \
+    "$(((total_seconds % 3600) / 60))" \
+    "$((total_seconds % 60))"
+}
+
 collect_artifacts() {
   local exit_code=$?
   set +e
+  local now_epoch
+  local total_inference_seconds
+
+  if [[ "${INFERENCE_STARTED}" == "1" ]]; then
+    now_epoch="$(date +%s)"
+    CURRENT_INFERENCE_SECONDS=$((now_epoch - INFERENCE_START_EPOCH))
+    if (( CURRENT_INFERENCE_SECONDS < 0 )); then
+      CURRENT_INFERENCE_SECONDS=0
+    fi
+  fi
+  total_inference_seconds=$((PREVIOUS_INFERENCE_SECONDS + CURRENT_INFERENCE_SECONDS))
 
   {
     echo "timestamp=$(date --iso-8601=seconds)"
@@ -73,6 +102,10 @@ collect_artifacts() {
     echo "slurm_cpus_per_task=${SLURM_CPUS_PER_TASK:-}"
     echo "slurm_cpus_on_node=${SLURM_CPUS_ON_NODE:-}"
     echo "intra_threads=${ORT_INTRA_OP_NUM_THREADS}"
+    echo "previous_inference_seconds=${PREVIOUS_INFERENCE_SECONDS}"
+    echo "current_inference_seconds=${CURRENT_INFERENCE_SECONDS}"
+    echo "total_inference_seconds=${total_inference_seconds}"
+    echo "total_inference_time=$(format_seconds "${total_inference_seconds}")"
   } > "${ENV_TXT}"
 
   : > "${ARTIFACTS_TXT}"
@@ -98,6 +131,8 @@ collect_artifacts() {
 }
 
 trap collect_artifacts EXIT
+trap 'exit 143' TERM
+trap 'exit 130' INT
 
 echo "Starting ONNX inference job at $(date --iso-8601=seconds)"
 echo "Run label: ${RUN_LABEL}"
@@ -127,11 +162,20 @@ export HF_HOME="${RUN_DIR}/.hf_home"
 export HF_HUB_CACHE="${RUN_DIR}/.hf_cache"
 export ORT_INTRA_OP_NUM_THREADS
 
+INFERENCE_STARTED=1
+INFERENCE_START_EPOCH="$(date +%s)"
 "${PYTHON_BIN}" "${SCRIPT_DIR}/run_inference.py" \
   --node-counts "${NODE_COUNTS_CSV}" \
   --output "${RESULTS_CSV}" \
   --progress-log "${RESULTS_LOG}" \
   --hf-cache "${RUN_DIR}/download_tmp" \
   --intra-op-num-threads "${ORT_INTRA_OP_NUM_THREADS}"
+INFERENCE_STATUS=$?
+CURRENT_INFERENCE_SECONDS=$(($(date +%s) - INFERENCE_START_EPOCH))
+if (( CURRENT_INFERENCE_SECONDS < 0 )); then
+  CURRENT_INFERENCE_SECONDS=0
+fi
+INFERENCE_STARTED=0
 
 echo "Finished ONNX inference job at $(date --iso-8601=seconds)"
+exit "${INFERENCE_STATUS}"
