@@ -11,7 +11,7 @@ HUGGINGFACE_HUB_VERSION="${HUGGINGFACE_HUB_VERSION:-0.30.2}"
 LOG_FILE="${SCRIPT_DIR}/logs/setup_inference_env.log"
 LOCK_DIR="${SCRIPT_DIR}/.setup_lock"
 
-mkdir -p "${SCRIPT_DIR}/artifacts" "${SCRIPT_DIR}/logs"
+mkdir -p "${SCRIPT_DIR}/logs"
 exec > >(tee -a "${LOG_FILE}") 2>&1
 
 if ! mkdir "${LOCK_DIR}" 2>/dev/null; then
@@ -25,19 +25,24 @@ if ! command -v conda >/dev/null 2>&1; then
   exit 1
 fi
 
-CONDA_BASE="$(conda info --base)"
-# shellcheck disable=SC1091
-source "${CONDA_BASE}/etc/profile.d/conda.sh"
-
-if conda env list | awk '{print $1}' | grep -Fxq "${ENV_NAME}"; then
-  echo "Using existing conda environment: ${ENV_NAME}"
+if [[ "${ENV_NAME}" == */* ]]; then
+  CONDA_ENV_ARGS=(-p "${ENV_NAME}")
+  if [[ -d "${ENV_NAME}" ]]; then
+    echo "Using existing conda environment: ${ENV_NAME}"
+  else
+    conda create -y -p "${ENV_NAME}" "python=${PYTHON_VERSION}"
+  fi
 else
-  conda create -y -n "${ENV_NAME}" "python=${PYTHON_VERSION}"
+  CONDA_ENV_ARGS=(-n "${ENV_NAME}")
+  if conda env list | awk '{print $1}' | grep -Fxq "${ENV_NAME}"; then
+    echo "Using existing conda environment: ${ENV_NAME}"
+  else
+    conda create -y -n "${ENV_NAME}" "python=${PYTHON_VERSION}"
+  fi
 fi
 
-conda activate "${ENV_NAME}"
-python -m pip install --upgrade pip
-python -m pip install --upgrade --only-binary=:all: \
+conda run "${CONDA_ENV_ARGS[@]}" python -m pip install --upgrade pip
+conda run "${CONDA_ENV_ARGS[@]}" python -m pip install --upgrade --only-binary=:all: \
   "numpy==${NUMPY_VERSION}" \
   "onnx==${ONNX_VERSION}" \
   "onnxruntime==${ONNXRUNTIME_VERSION}" \
@@ -59,7 +64,7 @@ echo "ONNX version: ${ONNX_VERSION}"
 echo "ONNX Runtime version: ${ONNXRUNTIME_VERSION}"
 echo "Hugging Face Hub version: ${HUGGINGFACE_HUB_VERSION}"
 
-python - <<PY
+conda run "${CONDA_ENV_ARGS[@]}" python - <<PY
 import certifi
 import huggingface_hub
 import huggingface_hub.hf_api
@@ -87,14 +92,14 @@ for name, expected_version in expected.items():
 print(f"certifi {certifi.where()}")
 PY
 
-if command -v hf >/dev/null 2>&1 && hf auth whoami >/dev/null 2>&1; then
+if conda run "${CONDA_ENV_ARGS[@]}" hf auth whoami >/dev/null 2>&1; then
   echo "Hugging Face is already logged in."
-elif command -v hf >/dev/null 2>&1; then
-  hf auth login
-elif huggingface-cli whoami >/dev/null 2>&1; then
+elif conda run "${CONDA_ENV_ARGS[@]}" hf auth login; then
+  :
+elif conda run "${CONDA_ENV_ARGS[@]}" huggingface-cli whoami >/dev/null 2>&1; then
   echo "Hugging Face is already logged in."
 else
-  huggingface-cli login
+  conda run "${CONDA_ENV_ARGS[@]}" huggingface-cli login
 fi
 
 echo "Environment ready. Activate it with:"
