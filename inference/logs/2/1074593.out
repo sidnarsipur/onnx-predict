@@ -1,0 +1,5 @@
+Starting ONNX inference job at 2026-04-22T00:27:31-04:00
+Run label: 2
+Run directory: /scratch/snarsipu/onnx-predict/inference/logs/2
+Starting a fresh run log at /scratch/snarsipu/onnx-predict/inference/logs/2/inference_results.log
+Artifacts written to /scratch/snarsipu/onnx-predict/inference/logs/2/artifacts.txt
