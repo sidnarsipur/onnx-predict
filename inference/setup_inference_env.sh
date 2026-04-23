@@ -57,7 +57,7 @@ conda run "${CONDA_ENV_ARGS[@]}" python -m pip install --upgrade --only-binary=:
   tqdm \
   typing_extensions \
   urllib3 \
-  "huggingface_hub==${HUGGINGFACE_HUB_VERSION}"
+  "huggingface_hub[cli]==${HUGGINGFACE_HUB_VERSION}"
 
 echo "NumPy version: ${NUMPY_VERSION}"
 echo "ONNX version: ${ONNX_VERSION}"
@@ -91,6 +91,8 @@ for name, expected_version in expected.items():
         raise SystemExit(f"Expected {name}=={expected_version}, got {actual_version}")
 print(f"certifi {certifi.where()}")
 PY
+
+conda run "${CONDA_ENV_ARGS[@]}" bash -c 'command -v hf || command -v huggingface-cli' >/dev/null
 
 if conda run "${CONDA_ENV_ARGS[@]}" hf auth whoami >/dev/null 2>&1; then
   echo "Hugging Face is already logged in."
