@@ -1,0 +1,343 @@
+Using existing conda environment: onnx-inference
+Requirement already satisfied: pip in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (26.0.1)
+Collecting numpy==1.26.4
+  Downloading numpy-1.26.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+ERROR: Could not find a version that satisfies the requirement onnx==1.21.0 (from versions: 1.13.0, 1.13.1, 1.14.0, 1.14.1, 1.15.0, 1.16.0, 1.16.1, 1.16.2, 1.17.0, 1.18.0, 1.19.0, 1.19.1rc1, 1.19.1)
+ERROR: No matching distribution found for onnx==1.21.0
+Using existing conda environment: onnx-inference
+Requirement already satisfied: pip in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (26.0.1)
+Collecting numpy==1.26.4
+  Using cached numpy-1.26.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+Collecting onnx==1.16.1
+  Downloading onnx-1.16.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (16 kB)
+ERROR: Could not find a version that satisfies the requirement onnxruntime==1.19.0 (from versions: 1.15.0, 1.15.1, 1.16.0, 1.16.1, 1.16.2, 1.16.3)
+ERROR: No matching distribution found for onnxruntime==1.19.0
+Using existing conda environment: onnx-inference
+Requirement already satisfied: pip in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (26.0.1)
+Collecting numpy==1.26.4
+  Using cached numpy-1.26.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+Collecting onnx==1.16.1
+  Using cached onnx-1.16.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (16 kB)
+Collecting onnxruntime==1.20.0
+  Downloading onnxruntime-1.20.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (4.4 kB)
+Collecting huggingface_hub
+  Downloading huggingface_hub-1.11.0-py3-none-any.whl.metadata (14 kB)
+Collecting protobuf>=3.20.2 (from onnx==1.16.1)
+  Downloading protobuf-7.34.1-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
+Collecting coloredlogs (from onnxruntime==1.20.0)
+  Downloading coloredlogs-15.0.1-py2.py3-none-any.whl.metadata (12 kB)
+Collecting flatbuffers (from onnxruntime==1.20.0)
+  Downloading flatbuffers-25.12.19-py2.py3-none-any.whl.metadata (1.0 kB)
+Requirement already satisfied: packaging in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (from onnxruntime==1.20.0) (26.0)
+Collecting sympy (from onnxruntime==1.20.0)
+  Downloading sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+Collecting filelock>=3.10.0 (from huggingface_hub)
+  Downloading filelock-3.29.0-py3-none-any.whl.metadata (2.0 kB)
+Collecting fsspec>=2023.5.0 (from huggingface_hub)
+  Downloading fsspec-2026.3.0-py3-none-any.whl.metadata (10 kB)
+Collecting hf-xet<2.0.0,>=1.4.3 (from huggingface_hub)
+  Downloading hf_xet-1.4.3-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (4.9 kB)
+Collecting httpx<1,>=0.23.0 (from huggingface_hub)
+  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Collecting pyyaml>=5.1 (from huggingface_hub)
+  Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Requirement already satisfied: tqdm>=4.42.1 in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (from huggingface_hub) (4.67.3)
+Collecting typer (from huggingface_hub)
+  Downloading typer-0.24.1-py3-none-any.whl.metadata (16 kB)
+Collecting typing-extensions>=4.1.0 (from huggingface_hub)
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting anyio (from httpx<1,>=0.23.0->huggingface_hub)
+  Downloading anyio-4.13.0-py3-none-any.whl.metadata (4.5 kB)
+Requirement already satisfied: certifi in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (from httpx<1,>=0.23.0->huggingface_hub) (2026.2.25)
+Collecting httpcore==1.* (from httpx<1,>=0.23.0->huggingface_hub)
+  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Requirement already satisfied: idna in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (from httpx<1,>=0.23.0->huggingface_hub) (3.11)
+Collecting h11>=0.16 (from httpcore==1.*->httpx<1,>=0.23.0->huggingface_hub)
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting humanfriendly>=9.1 (from coloredlogs->onnxruntime==1.20.0)
+  Downloading humanfriendly-10.0-py2.py3-none-any.whl.metadata (9.2 kB)
+Collecting mpmath<1.4,>=1.1.0 (from sympy->onnxruntime==1.20.0)
+  Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+Collecting click>=8.2.1 (from typer->huggingface_hub)
+  Downloading click-8.3.2-py3-none-any.whl.metadata (2.6 kB)
+Collecting shellingham>=1.3.0 (from typer->huggingface_hub)
+  Downloading shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
+Collecting rich>=12.3.0 (from typer->huggingface_hub)
+  Downloading rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+Collecting annotated-doc>=0.0.2 (from typer->huggingface_hub)
+  Downloading annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
+Collecting markdown-it-py>=2.2.0 (from rich>=12.3.0->typer->huggingface_hub)
+  Downloading markdown_it_py-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich>=12.3.0->typer->huggingface_hub)
+  Downloading pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=12.3.0->typer->huggingface_hub)
+  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Downloading numpy-1.26.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (18.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 18.3/18.3 MB 104.8 MB/s  0:00:00
+Downloading onnx-1.16.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (15.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.9/15.9 MB 91.7 MB/s  0:00:00
+Downloading onnxruntime-1.20.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (13.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.3/13.3 MB 14.5 MB/s  0:00:00
+Downloading huggingface_hub-1.11.0-py3-none-any.whl (645 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 645.5/645.5 kB 14.2 MB/s  0:00:00
+Downloading hf_xet-1.4.3-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.2/4.2 MB 124.7 MB/s  0:00:00
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+Downloading filelock-3.29.0-py3-none-any.whl (39 kB)
+Downloading fsspec-2026.3.0-py3-none-any.whl (202 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading protobuf-7.34.1-cp310-abi3-manylinux2014_x86_64.whl (324 kB)
+Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 806.6/806.6 kB 19.4 MB/s  0:00:00
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+Downloading anyio-4.13.0-py3-none-any.whl (114 kB)
+Downloading coloredlogs-15.0.1-py2.py3-none-any.whl (46 kB)
+Downloading humanfriendly-10.0-py2.py3-none-any.whl (86 kB)
+Downloading flatbuffers-25.12.19-py2.py3-none-any.whl (26 kB)
+Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 82.2 MB/s  0:00:00
+Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 10.0 MB/s  0:00:00
+Downloading typer-0.24.1-py3-none-any.whl (56 kB)
+Downloading annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+Downloading click-8.3.2-py3-none-any.whl (108 kB)
+Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+Downloading pygments-2.20.0-py3-none-any.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 22.2 MB/s  0:00:00
+Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Installing collected packages: mpmath, flatbuffers, typing-extensions, sympy, shellingham, pyyaml, pygments, protobuf, numpy, mdurl, humanfriendly, hf-xet, h11, fsspec, filelock, click, annotated-doc, onnx, markdown-it-py, httpcore, coloredlogs, anyio, rich, onnxruntime, httpx, typer, huggingface_hub
+
+Successfully installed annotated-doc-0.0.4 anyio-4.13.0 click-8.3.2 coloredlogs-15.0.1 filelock-3.29.0 flatbuffers-25.12.19 fsspec-2026.3.0 h11-0.16.0 hf-xet-1.4.3 httpcore-1.0.9 httpx-0.28.1 huggingface_hub-1.11.0 humanfriendly-10.0 markdown-it-py-4.0.0 mdurl-0.1.2 mpmath-1.3.0 numpy-1.26.4 onnx-1.16.1 onnxruntime-1.20.0 protobuf-7.34.1 pygments-2.20.0 pyyaml-6.0.3 rich-15.0.0 shellingham-1.5.4 sympy-1.14.0 typer-0.24.1 typing-extensions-4.15.0
+Hugging Face cache:
+  HF_HOME=/scratch/snarsipu/onnx-predict/inference/.hf_home
+  HF_HUB_CACHE=/scratch/snarsipu/onnx-predict/inference/.hf_cache
+NumPy version: 1.26.4
+ONNX version: 1.16.1
+ONNX Runtime version: 1.20.0
+numpy 1.26.4
+onnx 1.16.1
+onnxruntime 1.20.0
+    To log in, `huggingface_hub` requires a token generated from https://huggingface.co/settings/tokens .
+
+    _|    _|  _|    _|    _|_|_|    _|_|_|  _|_|_|  _|      _|    _|_|_|      _|_|_|_|    _|_|      _|_|_|  _|_|_|_|
+    _|    _|  _|    _|  _|        _|          _|    _|_|    _|  _|            _|        _|    _|  _|        _|
+    _|_|_|_|  _|    _|  _|  _|_|  _|  _|_|    _|    _|  _|  _|  _|  _|_|      _|_|_|    _|_|_|_|  _|        _|_|_|
+    _|    _|  _|    _|  _|    _|  _|    _|    _|    _|    _|_|  _|    _|      _|        _|    _|  _|        _|
+    _|    _|    _|_|      _|_|_|    _|_|_|  _|_|_|  _|      _|    _|_|_|      _|        _|    _|    _|_|_|  _|_|_|_|
+
+Add token as git credential? [y/N]: Error: Invalid user token.
+[90mSet HF_DEBUG=1 as environment variable for full traceback.[0m
+Using existing conda environment: onnx-inference
+Requirement already satisfied: pip in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (26.0.1)
+Requirement already satisfied: numpy==1.26.4 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (1.26.4)
+Requirement already satisfied: onnx==1.16.1 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (1.16.1)
+Requirement already satisfied: onnxruntime==1.20.0 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (1.20.0)
+Requirement already satisfied: huggingface_hub in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (1.11.0)
+Requirement already satisfied: protobuf>=3.20.2 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from onnx==1.16.1) (7.34.1)
+Requirement already satisfied: coloredlogs in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from onnxruntime==1.20.0) (15.0.1)
+Requirement already satisfied: flatbuffers in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from onnxruntime==1.20.0) (25.12.19)
+Requirement already satisfied: packaging in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (from onnxruntime==1.20.0) (26.0)
+Requirement already satisfied: sympy in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from onnxruntime==1.20.0) (1.14.0)
+Requirement already satisfied: filelock>=3.10.0 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from huggingface_hub) (3.29.0)
+Requirement already satisfied: fsspec>=2023.5.0 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from huggingface_hub) (2026.3.0)
+Requirement already satisfied: hf-xet<2.0.0,>=1.4.3 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from huggingface_hub) (1.4.3)
+Requirement already satisfied: httpx<1,>=0.23.0 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from huggingface_hub) (0.28.1)
+Requirement already satisfied: pyyaml>=5.1 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from huggingface_hub) (6.0.3)
+Requirement already satisfied: tqdm>=4.42.1 in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (from huggingface_hub) (4.67.3)
+Requirement already satisfied: typer in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from huggingface_hub) (0.24.1)
+Requirement already satisfied: typing-extensions>=4.1.0 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from huggingface_hub) (4.15.0)
+Requirement already satisfied: anyio in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from httpx<1,>=0.23.0->huggingface_hub) (4.13.0)
+Requirement already satisfied: certifi in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (from httpx<1,>=0.23.0->huggingface_hub) (2026.2.25)
+Requirement already satisfied: httpcore==1.* in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from httpx<1,>=0.23.0->huggingface_hub) (1.0.9)
+Requirement already satisfied: idna in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (from httpx<1,>=0.23.0->huggingface_hub) (3.11)
+Requirement already satisfied: h11>=0.16 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from httpcore==1.*->httpx<1,>=0.23.0->huggingface_hub) (0.16.0)
+Requirement already satisfied: humanfriendly>=9.1 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from coloredlogs->onnxruntime==1.20.0) (10.0)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from sympy->onnxruntime==1.20.0) (1.3.0)
+Requirement already satisfied: click>=8.2.1 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from typer->huggingface_hub) (8.3.2)
+Requirement already satisfied: shellingham>=1.3.0 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from typer->huggingface_hub) (1.5.4)
+Requirement already satisfied: rich>=12.3.0 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from typer->huggingface_hub) (15.0.0)
+Requirement already satisfied: annotated-doc>=0.0.2 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from typer->huggingface_hub) (0.0.4)
+Requirement already satisfied: markdown-it-py>=2.2.0 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from rich>=12.3.0->typer->huggingface_hub) (4.0.0)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from rich>=12.3.0->typer->huggingface_hub) (2.20.0)
+Requirement already satisfied: mdurl~=0.1 in /scratch/snarsipu/my-conda/envs/onnx-inference/lib/python3.11/site-packages (from markdown-it-py>=2.2.0->rich>=12.3.0->typer->huggingface_hub) (0.1.2)
+Hugging Face cache:
+  HF_HOME=/scratch/snarsipu/onnx-predict/inference/.hf_home
+  HF_HUB_CACHE=/scratch/snarsipu/onnx-predict/inference/.hf_cache
+NumPy version: 1.26.4
+ONNX version: 1.16.1
+ONNX Runtime version: 1.20.0
+numpy 1.26.4
+onnx 1.16.1
+onnxruntime 1.20.0
+    To log in, `huggingface_hub` requires a token generated from https://huggingface.co/settings/tokens .
+
+    _|    _|  _|    _|    _|_|_|    _|_|_|  _|_|_|  _|      _|    _|_|_|      _|_|_|_|    _|_|      _|_|_|  _|_|_|_|
+    _|    _|  _|    _|  _|        _|          _|    _|_|    _|  _|            _|        _|    _|  _|        _|
+    _|_|_|_|  _|    _|  _|  _|_|  _|  _|_|    _|    _|  _|  _|  _|  _|_|      _|_|_|    _|_|_|_|  _|        _|_|_|
+    _|    _|  _|    _|  _|    _|  _|    _|    _|    _|    _|_|  _|    _|      _|        _|    _|  _|        _|
+    _|    _|    _|_|      _|_|_|    _|_|_|  _|_|_|  _|      _|    _|_|_|      _|        _|    _|    _|_|_|  _|_|_|_|
+
+Add token as git credential? [y/N]: Token is valid (permission: write).
+The token `BlueHive3` has been saved to /scratch/snarsipu/onnx-predict/inference/.hf_home/stored_tokens
+Your token has been saved to /scratch/snarsipu/onnx-predict/inference/.hf_home/token
+Login successful.
+The current active token is: `BlueHive3`
+Environment ready. Activate it with:
+  conda activate onnx-inference
+Using existing conda environment: onnx-inference
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: pip in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (26.0.1)
+Defaulting to user installation because normal site-packages is not writeable
+Collecting numpy==1.26.4
+  Downloading numpy-1.26.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+Collecting onnx==1.16.1
+  Downloading onnx-1.16.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (16 kB)
+Collecting onnxruntime==1.20.0
+  Downloading onnxruntime-1.20.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (4.4 kB)
+Requirement already satisfied: certifi in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (2026.2.25)
+Requirement already satisfied: charset-normalizer in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (3.4.5)
+Collecting charset-normalizer
+  Downloading charset_normalizer-3.4.7-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+Collecting filelock
+  Using cached filelock-3.29.0-py3-none-any.whl.metadata (2.0 kB)
+Collecting fsspec
+  Using cached fsspec-2026.3.0-py3-none-any.whl.metadata (10 kB)
+Requirement already satisfied: idna in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (3.11)
+Requirement already satisfied: packaging in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (26.0)
+Collecting packaging
+  Using cached packaging-26.1-py3-none-any.whl.metadata (3.5 kB)
+Collecting pyyaml
+  Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Requirement already satisfied: requests in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (2.32.5)
+Collecting requests
+  Using cached requests-2.33.1-py3-none-any.whl.metadata (4.8 kB)
+Requirement already satisfied: tqdm in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (4.67.3)
+Collecting typing_extensions
+  Using cached typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Requirement already satisfied: urllib3 in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (2.6.3)
+Collecting huggingface_hub==0.30.2
+  Using cached huggingface_hub-0.30.2-py3-none-any.whl.metadata (13 kB)
+Collecting protobuf>=3.20.2 (from onnx==1.16.1)
+  Using cached protobuf-7.34.1-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
+Collecting coloredlogs (from onnxruntime==1.20.0)
+  Using cached coloredlogs-15.0.1-py2.py3-none-any.whl.metadata (12 kB)
+Collecting flatbuffers (from onnxruntime==1.20.0)
+  Using cached flatbuffers-25.12.19-py2.py3-none-any.whl.metadata (1.0 kB)
+Collecting sympy (from onnxruntime==1.20.0)
+  Using cached sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+Collecting humanfriendly>=9.1 (from coloredlogs->onnxruntime==1.20.0)
+  Using cached humanfriendly-10.0-py2.py3-none-any.whl.metadata (9.2 kB)
+Collecting mpmath<1.4,>=1.1.0 (from sympy->onnxruntime==1.20.0)
+  Using cached mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+Downloading numpy-1.26.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (18.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 18.0/18.0 MB 90.9 MB/s  0:00:00
+Downloading onnx-1.16.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (15.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.9/15.9 MB 179.5 MB/s  0:00:00
+Downloading onnxruntime-1.20.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (13.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.3/13.3 MB 150.0 MB/s  0:00:00
+Using cached huggingface_hub-0.30.2-py3-none-any.whl (481 kB)
+Downloading charset_normalizer-3.4.7-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (216 kB)
+Using cached filelock-3.29.0-py3-none-any.whl (39 kB)
+Using cached fsspec-2026.3.0-py3-none-any.whl (202 kB)
+Using cached packaging-26.1-py3-none-any.whl (95 kB)
+Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 12.2 MB/s  0:00:00
+Using cached requests-2.33.1-py3-none-any.whl (64 kB)
+Using cached typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+Using cached protobuf-7.34.1-cp310-abi3-manylinux2014_x86_64.whl (324 kB)
+Using cached coloredlogs-15.0.1-py2.py3-none-any.whl (46 kB)
+Using cached humanfriendly-10.0-py2.py3-none-any.whl (86 kB)
+Using cached flatbuffers-25.12.19-py2.py3-none-any.whl (26 kB)
+Using cached sympy-1.14.0-py3-none-any.whl (6.3 MB)
+Using cached mpmath-1.3.0-py3-none-any.whl (536 kB)
+Installing collected packages: mpmath, flatbuffers, typing_extensions, sympy, pyyaml, protobuf, packaging, numpy, humanfriendly, fsspec, filelock, charset-normalizer, requests, onnx, coloredlogs, onnxruntime, huggingface_hub
+  WARNING: The script isympy is installed in '/home/snarsipu/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script f2py is installed in '/home/snarsipu/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script humanfriendly is installed in '/home/snarsipu/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script normalizer is installed in '/home/snarsipu/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The scripts backend-test-tools, check-model and check-node are installed in '/home/snarsipu/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script coloredlogs is installed in '/home/snarsipu/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script onnxruntime_test is installed in '/home/snarsipu/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script huggingface-cli is installed in '/home/snarsipu/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+
+Successfully installed charset-normalizer-3.4.7 coloredlogs-15.0.1 filelock-3.29.0 flatbuffers-25.12.19 fsspec-2026.3.0 huggingface_hub-0.30.2 humanfriendly-10.0 mpmath-1.3.0 numpy-1.26.4 onnx-1.16.1 onnxruntime-1.20.0 packaging-26.1 protobuf-7.34.1 pyyaml-6.0.3 requests-2.33.1 sympy-1.14.0 typing_extensions-4.15.0
+Hugging Face cache:
+  HF_HOME=/scratch/snarsipu/onnx-predict/inference/.hf_home
+  HF_HUB_CACHE=/scratch/snarsipu/onnx-predict/inference/.hf_cache
+NumPy version: 1.26.4
+ONNX version: 1.16.1
+ONNX Runtime version: 1.20.0
+Hugging Face Hub version: 0.30.2
+numpy 1.26.4
+onnx 1.16.1
+onnxruntime 1.20.0
+huggingface_hub 0.30.2
+certifi /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages/certifi/cacert.pem
+Hugging Face is already logged in.
+Environment ready. Activate it with:
+  conda activate onnx-inference
+Using existing conda environment: onnx-inference
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: pip in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (26.0.1)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: numpy==1.26.4 in /home/snarsipu/.local/lib/python3.12/site-packages (1.26.4)
+Requirement already satisfied: onnx==1.16.1 in /home/snarsipu/.local/lib/python3.12/site-packages (1.16.1)
+Requirement already satisfied: onnxruntime==1.20.0 in /home/snarsipu/.local/lib/python3.12/site-packages (1.20.0)
+Requirement already satisfied: certifi in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (2026.2.25)
+Requirement already satisfied: charset-normalizer in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (3.4.5)
+Collecting charset-normalizer
+  Using cached charset_normalizer-3.4.7-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+Requirement already satisfied: filelock in /home/snarsipu/.local/lib/python3.12/site-packages (3.29.0)
+Requirement already satisfied: fsspec in /home/snarsipu/.local/lib/python3.12/site-packages (2026.3.0)
+Requirement already satisfied: idna in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (3.11)
+Requirement already satisfied: packaging in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (26.0)
+Collecting packaging
+  Using cached packaging-26.1-py3-none-any.whl.metadata (3.5 kB)
+Requirement already satisfied: pyyaml in /home/snarsipu/.local/lib/python3.12/site-packages (6.0.3)
+Requirement already satisfied: requests in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (2.32.5)
+Collecting requests
+  Using cached requests-2.33.1-py3-none-any.whl.metadata (4.8 kB)
+Requirement already satisfied: tqdm in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (4.67.3)
+Requirement already satisfied: typing_extensions in /home/snarsipu/.local/lib/python3.12/site-packages (4.15.0)
+Requirement already satisfied: urllib3 in /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages (2.6.3)
+Requirement already satisfied: huggingface_hub==0.30.2 in /home/snarsipu/.local/lib/python3.12/site-packages (0.30.2)
+Requirement already satisfied: protobuf>=3.20.2 in /home/snarsipu/.local/lib/python3.12/site-packages (from onnx==1.16.1) (7.34.1)
+Requirement already satisfied: coloredlogs in /home/snarsipu/.local/lib/python3.12/site-packages (from onnxruntime==1.20.0) (15.0.1)
+Requirement already satisfied: flatbuffers in /home/snarsipu/.local/lib/python3.12/site-packages (from onnxruntime==1.20.0) (25.12.19)
+Requirement already satisfied: sympy in /home/snarsipu/.local/lib/python3.12/site-packages (from onnxruntime==1.20.0) (1.14.0)
+Requirement already satisfied: humanfriendly>=9.1 in /home/snarsipu/.local/lib/python3.12/site-packages (from coloredlogs->onnxruntime==1.20.0) (10.0)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /home/snarsipu/.local/lib/python3.12/site-packages (from sympy->onnxruntime==1.20.0) (1.3.0)
+Using cached charset_normalizer-3.4.7-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (216 kB)
+Using cached packaging-26.1-py3-none-any.whl (95 kB)
+Using cached requests-2.33.1-py3-none-any.whl (64 kB)
+Installing collected packages: packaging, charset-normalizer, requests
+  WARNING: The script normalizer is installed in '/home/snarsipu/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+
+Successfully installed charset-normalizer-3.4.7 packaging-26.1 requests-2.33.1
+Hugging Face cache:
+  HF_HOME=/scratch/snarsipu/onnx-predict/inference/.hf_home
+  HF_HUB_CACHE=/scratch/snarsipu/onnx-predict/inference/.hf_cache
+NumPy version: 1.26.4
+ONNX version: 1.16.1
+ONNX Runtime version: 1.20.0
+Hugging Face Hub version: 0.30.2
+numpy 1.26.4
+onnx 1.16.1
+onnxruntime 1.20.0
+huggingface_hub 0.30.2
+certifi /sfw/rhel9-x86_64/miniforge3/26.1.1/lib/python3.12/site-packages/certifi/cacert.pem
+Hugging Face is already logged in.
+Environment ready. Activate it with:
+  conda activate onnx-inference
