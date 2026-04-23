@@ -8,6 +8,8 @@ import csv
 import os
 import shutil
 import statistics
+import subprocess
+import sys
 import tempfile
 import time
 import urllib.request
@@ -101,6 +103,21 @@ def parse_args() -> argparse.Namespace:
         default=DEFAULT_REPO_PREFIX,
         help="Hugging Face org/user that owns the model repos.",
     )
+    parser.add_argument(
+        "--only-model",
+        default="",
+        help=argparse.SUPPRESS,
+    )
+    parser.add_argument(
+        "--source-model",
+        default="",
+        help=argparse.SUPPRESS,
+    )
+    parser.add_argument(
+        "--repo-file",
+        default="",
+        help=argparse.SUPPRESS,
+    )
     return parser.parse_args()
 
 
@@ -128,15 +145,24 @@ def one_line(message: str) -> str:
     return " ".join(str(message).replace("\r", "\n").split())
 
 
-def read_completed_models(progress_log: Path) -> set[str]:
-    if not progress_log.exists():
-        return set()
-
+def read_completed_models(progress_log: Path, output_path: Path) -> set[str]:
     completed: set[str] = set()
-    for line in progress_log.read_text(encoding="utf-8").splitlines():
-        parts = line.strip().split("\t", 3)
-        if len(parts) >= 3 and parts[1] in {"DONE", "FAILED"}:
-            completed.add(parts[2])
+
+    if progress_log.exists():
+        for line in progress_log.read_text(encoding="utf-8").splitlines():
+            parts = line.strip().split("\t", 3)
+            if len(parts) >= 3 and parts[1] in {"DONE", "FAILED"}:
+                completed.add(parts[2])
+
+    if output_path.exists():
+        try:
+            with output_path.open(newline="", encoding="utf-8") as handle:
+                for row in csv.DictReader(handle):
+                    if row.get("status") in {"DONE", "FAILED"} and row.get("model"):
+                        completed.add(row["model"])
+        except csv.Error:
+            pass
+
     return completed
 
 
@@ -424,8 +450,98 @@ def process_entry(
     append_log(progress_log, "DONE", entry.model_name)
 
 
+def find_entry(entries: list[ModelEntry], model_name: str) -> ModelEntry:
+    for entry in entries:
+        if entry.model_name == model_name:
+            return entry
+    raise RuntimeError(f"Could not find model {model_name} in node counts")
+
+
+def signal_name(return_code: int) -> str:
+    if return_code >= 0:
+        return f"exit code {return_code}"
+    return f"signal {-return_code}"
+
+
+def child_command(
+    args: argparse.Namespace,
+    script_path: Path,
+    node_counts_path: Path,
+    output_path: Path,
+    progress_log: Path,
+    source_model_path: Path,
+    repo_file: str,
+    entry: ModelEntry,
+) -> list[str]:
+    command = [
+        sys.executable,
+        str(script_path),
+        "--node-counts",
+        str(node_counts_path),
+        "--output",
+        str(output_path),
+        "--progress-log",
+        str(progress_log),
+        "--hf-cache",
+        str(resolve_path(args.hf_cache, script_path.parent)) if args.hf_cache else "",
+        "--warmup",
+        str(args.warmup),
+        "--samples",
+        str(args.samples),
+        "--intra-op-num-threads",
+        str(args.intra_op_num_threads),
+        "--repo-prefix",
+        args.repo_prefix,
+        "--only-model",
+        entry.model_name,
+        "--source-model",
+        str(source_model_path),
+        "--repo-file",
+        repo_file,
+    ]
+    return command
+
+
+def run_isolated_entry(
+    entry: ModelEntry,
+    source_model_path: Path,
+    repo_file: str,
+    args: argparse.Namespace,
+    script_path: Path,
+    node_counts_path: Path,
+    output_path: Path,
+    progress_log: Path,
+) -> None:
+    result = subprocess.run(
+        child_command(
+            args,
+            script_path,
+            node_counts_path,
+            output_path,
+            progress_log,
+            source_model_path,
+            repo_file,
+            entry,
+        ),
+        check=False,
+    )
+    if result.returncode == 0:
+        return
+
+    if entry.model_name in read_completed_models(progress_log, output_path):
+        return
+
+    message = f"worker exited with {signal_name(result.returncode)}"
+    if result.returncode in {-9, 137}:
+        message = f"{message}; likely killed by the kernel or Slurm memory limit"
+    row = failure_row(entry, repo_file, message)
+    append_output_row(output_path, row)
+    append_log(progress_log, "FAILED", entry.model_name, message)
+
+
 def main() -> int:
-    script_dir = Path(__file__).resolve().parent
+    script_path = Path(__file__).resolve()
+    script_dir = script_path.parent
     args = parse_args()
     node_counts_path = resolve_path(args.node_counts, script_dir)
     output_path = resolve_path(args.output, script_dir)
@@ -433,7 +549,43 @@ def main() -> int:
     download_dir = resolve_path(args.hf_cache, script_dir) if args.hf_cache else Path(tempfile.mkdtemp())
 
     entries = read_model_entries(node_counts_path, args.repo_prefix)
-    completed = read_completed_models(progress_log)
+
+    if args.only_model:
+        entry = find_entry(entries, args.only_model)
+        repo_file = args.repo_file
+        source_model_path: Path | None = None
+        try:
+            if args.source_model:
+                source_model_path = resolve_path(args.source_model, script_dir)
+                if not repo_file:
+                    repo_file = entry.base_model_name
+            else:
+                api = HfApi()
+                repo_file = find_repo_file(api, entry)
+                source_model_path = download_model(entry, repo_file, download_dir)
+            providers = choose_providers()
+            process_entry(
+                entry,
+                source_model_path,
+                repo_file,
+                args,
+                providers,
+                output_path,
+                progress_log,
+            )
+        except Exception as exc:
+            row = failure_row(entry, repo_file, str(exc))
+            append_output_row(output_path, row)
+            append_log(progress_log, "FAILED", entry.model_name, str(exc))
+            print(f"Failed {entry.model_name}: {one_line(str(exc))}", flush=True)
+        finally:
+            if source_model_path is not None and not args.source_model:
+                delete_downloaded_model(source_model_path)
+            if not args.hf_cache and not args.source_model:
+                shutil.rmtree(download_dir, ignore_errors=True)
+        return 0
+
+    completed = read_completed_models(progress_log, output_path)
     grouped_entries = group_entries([entry for entry in entries if entry.model_name not in completed])
     api = HfApi()
     providers = choose_providers()
@@ -456,12 +608,13 @@ def main() -> int:
         for entry in group:
             print(f"Running {entry.model_name}...", flush=True)
             try:
-                process_entry(
+                run_isolated_entry(
                     entry,
                     source_model_path,
                     repo_file,
                     args,
-                    providers,
+                    script_path,
+                    node_counts_path,
                     output_path,
                     progress_log,
                 )
