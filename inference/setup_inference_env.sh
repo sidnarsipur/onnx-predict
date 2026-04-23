@@ -92,12 +92,21 @@ for name, expected_version in expected.items():
 print(f"certifi {certifi.where()}")
 PY
 
-conda run "${CONDA_ENV_ARGS[@]}" bash -c 'command -v hf || command -v huggingface-cli' >/dev/null
+if ! HF_CLI="$(
+  conda run "${CONDA_ENV_ARGS[@]}" bash -c \
+    'if command -v hf >/dev/null 2>&1; then echo hf; elif command -v huggingface-cli >/dev/null 2>&1; then echo huggingface-cli; else exit 1; fi'
+)"; then
+  echo "Hugging Face CLI was not found in ${ENV_NAME} after installing huggingface_hub[cli]." >&2
+  exit 1
+fi
+echo "Hugging Face CLI command: ${HF_CLI}"
 
-if conda run "${CONDA_ENV_ARGS[@]}" hf auth whoami >/dev/null 2>&1; then
-  echo "Hugging Face is already logged in."
-elif conda run "${CONDA_ENV_ARGS[@]}" hf auth login; then
-  :
+if [[ "${HF_CLI}" == "hf" ]]; then
+  if conda run "${CONDA_ENV_ARGS[@]}" hf auth whoami >/dev/null 2>&1; then
+    echo "Hugging Face is already logged in."
+  else
+    conda run "${CONDA_ENV_ARGS[@]}" hf auth login
+  fi
 elif conda run "${CONDA_ENV_ARGS[@]}" huggingface-cli whoami >/dev/null 2>&1; then
   echo "Hugging Face is already logged in."
 else
