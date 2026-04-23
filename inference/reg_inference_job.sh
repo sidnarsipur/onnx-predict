@@ -11,7 +11,6 @@ if [[ -z "${RUN_LABEL}" ]]; then
 fi
 
 ENV_NAME="${ENV_NAME:-onnx-inference}"
-JOB_ID="${JOB_ID:-local-$(date +%Y%m%d-%H%M%S)-$$}"
 ORT_INTRA_OP_NUM_THREADS="${ORT_INTRA_OP_NUM_THREADS:-0}"
 RUN_DIR="${SCRIPT_DIR}/logs/${RUN_LABEL}"
 PYTHON_BIN="python"
@@ -23,6 +22,47 @@ ARTIFACTS_TXT="${RUN_DIR}/artifacts.txt"
 ENV_TXT="${RUN_DIR}/env.txt"
 
 mkdir -p "${RUN_DIR}"
+
+next_job_id() {
+  local max_run=0
+  local saw_previous_job=0
+  local path
+  local name
+  local run_number
+  local had_nullglob
+
+  shopt -q nullglob
+  had_nullglob=$?
+  shopt -s nullglob
+
+  for path in "${RUN_DIR}"/*.out "${RUN_DIR}"/*.err "${RUN_DIR}"/*.pid; do
+    name="$(basename "${path}")"
+    if [[ "${name}" =~ ^run_([0-9]+)(\.|$) ]]; then
+      run_number="${BASH_REMATCH[1]}"
+      if (( run_number > max_run )); then
+        max_run="${run_number}"
+      fi
+    elif [[ "${name}" != *.launcher.out && "${name}" != *.launcher.err ]]; then
+      saw_previous_job=1
+    fi
+  done
+
+  if (( had_nullglob != 0 )); then
+    shopt -u nullglob
+  fi
+
+  if (( max_run == 0 && saw_previous_job == 1 )); then
+    echo "run_2"
+  else
+    echo "run_$((max_run + 1))"
+  fi
+}
+
+if [[ "${RUN_INFERENCE_DETACHED:-0}" == "1" && -n "${JOB_ID:-}" ]]; then
+  JOB_ID="${JOB_ID}"
+else
+  JOB_ID="$(next_job_id)"
+fi
 
 if [[ "${RUN_INFERENCE_DETACHED:-0}" != "1" && "${RUN_INFERENCE_FOREGROUND:-0}" != "1" ]]; then
   export RUN_INFERENCE_DETACHED=1
