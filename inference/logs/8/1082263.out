@@ -1,0 +1,10 @@
+Starting ONNX inference job at 2026-04-23T18:02:21-04:00
+Run label: 8
+Run directory: /scratch/snarsipu/onnx-predict/inference/logs/8
+Resuming from /scratch/snarsipu/onnx-predict/inference/logs/8/inference_results.log
+Existing completed/failed entries: 1662
+Using ONNX Runtime providers: CPUExecutionProvider
+Using ONNX Runtime intra-op threads: 4
+Running dm_nfnet_f4_Opset16.onnx...
+Finished ONNX inference job at 2026-04-23T18:02:46-04:00
+Artifacts written to /scratch/snarsipu/onnx-predict/inference/logs/8/artifacts.txt
