@@ -1,0 +1,1 @@
+/var/spool/slurm/job1082263/slurm_script: line 173: 260386 Killed                  "${PYTHON_BIN}" "${SCRIPT_DIR}/run_inference.py" --node-counts "${NODE_COUNTS_CSV}" --output "${RESULTS_CSV}" --progress-log "${RESULTS_LOG}" --hf-cache "${RUN_DIR}/download_tmp" --intra-op-num-threads "${ORT_INTRA_OP_NUM_THREADS}"
