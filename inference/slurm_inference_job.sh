@@ -2,10 +2,10 @@
 #SBATCH --job-name=onnx-inference
 #SBATCH --output=/dev/null
 #SBATCH --error=/dev/null
-#SBATCH --cpus-per-task=4
-#SBATCH --time=16:00:00
+#SBATCH --cpus-per-task=2
+#SBATCH --time=12:00:00
 #SBATCH --nodelist=bhdrb8x0158
-#SBATCH --mem=8G
+#SBATCH --mem=32G
 
 set -uo pipefail
 
