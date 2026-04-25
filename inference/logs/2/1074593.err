@@ -1,2 +1,0 @@
-conda was not found on PATH and ENV_NAME is not a usable env path: onnx-inference
-Set ENV_NAME=/path/to/conda/env or load the conda module before running this script.
