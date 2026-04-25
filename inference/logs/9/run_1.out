@@ -1,0 +1,9 @@
+Starting ONNX inference command at 2026-04-25T17:19:14+00:00
+Run label: 9
+Run directory: /home/onnx_predict/onnx-predict/inference/logs/9
+Resuming from /home/onnx_predict/onnx-predict/inference/logs/9/inference_results.log
+Existing completed/failed entries: 9064
+Using ONNX Runtime providers: CPUExecutionProvider
+Using ONNX Runtime intra-op threads: 4
+Finished ONNX inference command at 2026-04-25T17:19:16+00:00
+Artifacts written to /home/onnx_predict/onnx-predict/inference/logs/9/artifacts.txt
