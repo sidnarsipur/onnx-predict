@@ -1,0 +1,7 @@
+the dataset is collected through scraping 2900 onnx models from hugging face and applying various level of optimization on them.
+
+Given a target machine and an ONNX model, we want to predict its inference time without actually even running the model
+
+We are focusing on CPU performance on Linux x86 machines only due to our time constraint
+
+Collected information about node types/counts, tensor sizes, etc. from each model. We also have static info about machine core count, cache size, ram, etc.
