@@ -19,10 +19,23 @@ HARDWARE_COLUMNS = [
     "l2_cache_kb",
     "base_clock_mhz",
     "memory_bandwith_gbs",
+    "cpu_provider",
+    "machine_type",
+    "platform",
 ]
 BYTES_PER_KB = 1024
 BYTES_PER_MB = 1024 * 1024
 BYTES_PER_GB_DECIMAL = 1_000_000_000
+DROP_INFERENCE_COLUMNS = {
+    "base_model",
+    "repo_id",
+    "optimization_variant",
+    "provider",
+    "warmup_runs",
+    "sample_runs",
+    "status",
+    "error",
+}
 
 # Decimal bytes/sec. Values are derived from CPU model, memory generation, memory
 # transfer rate, channel count, and socket count observed in artifacts.txt.
@@ -166,6 +179,21 @@ def parse_hardware(run_dir: Path) -> dict[str, str]:
     artifacts = (run_dir / "artifacts.txt").read_text(encoding="utf-8")
     cpu_model = parse_labeled_value(artifacts, "Model name")
     sockets = parse_first_int(artifacts, "Socket(s)")
+    hostname = env.get("hostname") or parse_key_value_file(run_dir / "artifacts.txt").get("hostname", "")
+    cpu_model_upper = cpu_model.upper()
+
+    if "AMD" in cpu_model_upper:
+        cpu_provider = "amd"
+        machine_type = "epyc"
+    elif "PLATINUM" in cpu_model_upper:
+        cpu_provider = "intel"
+        machine_type = "xeon_plat"
+    elif "XEON" in cpu_model_upper:
+        cpu_provider = "intel"
+        machine_type = "xeon"
+    else:
+        cpu_provider = ""
+        machine_type = ""
 
     values: dict[str, object] = {
         "num_cores": env.get("intra_threads", ""),
@@ -175,8 +203,15 @@ def parse_hardware(run_dir: Path) -> dict[str, str]:
         "l2_cache_kb": bytes_to_kb(parse_cache_bytes(artifacts, "L2 cache")),
         "base_clock_mhz": parse_base_clock_mhz(artifacts),
         "memory_bandwith_gbs": bytes_per_second_to_gbs(derive_memory_bandwidth(cpu_model, sockets)),
+        "cpu_provider": cpu_provider,
+        "machine_type": machine_type,
+        "platform": "bluehive" if hostname.startswith("bhdrb") else "gcloud",
     }
     return {key: "" if value is None else str(value) for key, value in values.items()}
+
+
+def keep_inference_column(column: str) -> bool:
+    return column != "model" and column not in DROP_INFERENCE_COLUMNS and not re.fullmatch(r"sample_\d+_ms", column)
 
 
 def read_node_counts(path: Path) -> tuple[list[str], OrderedDict[str, dict[str, str]]]:
@@ -230,7 +265,7 @@ def main() -> None:
 
         hardware = parse_hardware(run_dir)
         for model, inference_row in inference_rows.items():
-            if inference_row.get("status") == "FAILED":
+            if inference_row.get("status") != "DONE" or inference_row.get("error"):
                 continue
 
             node_count_row = node_count_rows.get(model)
@@ -247,9 +282,7 @@ def main() -> None:
             )
             output_row["run_id"] = run_id
             output_row.update(hardware)
-            output_row.update(
-                {column: inference_row[column] for column in current_inference_columns if column != "model"}
-            )
+            output_row.update({column: inference_row[column] for column in current_inference_columns if keep_inference_column(column)})
             output_rows.append(output_row)
 
     if inference_columns is None:
@@ -260,7 +293,7 @@ def main() -> None:
         + [output_feature_name(column) for column in node_count_columns if column != "model"]
         + ["run_id"]
         + HARDWARE_COLUMNS
-        + [column for column in inference_columns if column != "model"]
+        + [column for column in inference_columns if keep_inference_column(column)]
     )
     with output_path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=output_columns)
