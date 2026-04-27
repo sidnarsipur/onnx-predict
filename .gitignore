@@ -8,3 +8,4 @@ __pycache__/
 .codex
 inference/logs/setup_inference_env.log
 .DS_Store
+training/*.csv
