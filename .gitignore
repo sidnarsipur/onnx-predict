@@ -7,3 +7,4 @@ __pycache__/
 *.lock
 .codex
 inference/logs/setup_inference_env.log
+.DS_Store
