@@ -1,0 +1,6 @@
+Starting ONNX inference job at 2026-04-26T16:24:53-04:00
+Run label: 13
+Run directory: /scratch/hliu68/onnx-predict/inference/logs/13
+Starting a fresh run log at /scratch/hliu68/onnx-predict/inference/logs/13/inference_results.log
+Finished ONNX inference job at 2026-04-26T16:24:57-04:00
+Artifacts written to /scratch/hliu68/onnx-predict/inference/logs/13/artifacts.txt

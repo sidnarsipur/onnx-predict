@@ -1,0 +1,7 @@
+
+EnvironmentLocationNotFound: Not a conda environment: /scratch/hliu68/my-conda/envs/onnx-inference
+
+Traceback (most recent call last):
+  File "/scratch/hliu68/onnx-predict/inference/run_inference.py", line 21, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'
