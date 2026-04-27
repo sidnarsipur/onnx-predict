@@ -6,4 +6,4 @@ __pycache__/
 *.toml
 *.lock
 .codex
-logs/setup_inference_env.log
+inference/logs/setup_inference_env.log

@@ -1,0 +1,211 @@
+
+===== run_context =====
+hostname=two-core-8-gb
+job_id=run_1
+job_name=local-command
+run_label=16
+exit_code=0
+script_dir=/home/onnx_predict/onnx-predict/inference
+run_dir=/home/onnx_predict/onnx-predict/inference/logs/16
+conda_env=onnx-inference
+python_bin=/home/onnx_predict/miniforge3/envs/onnx-inference/bin/python
+node_counts_csv=/home/onnx_predict/onnx-predict/inference/logs/16/node_counts.csv
+results_csv=/home/onnx_predict/onnx-predict/inference/logs/16/inference_results.csv
+results_log=/home/onnx_predict/onnx-predict/inference/logs/16/inference_results.log
+
+===== uname =====
+Linux two-core-8-gb 6.1.0-44-cloud-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.164-1 (2026-03-09) x86_64 GNU/Linux
+
+===== lscpu =====
+Architecture:                            x86_64
+CPU op-mode(s):                          32-bit, 64-bit
+Address sizes:                           48 bits physical, 48 bits virtual
+Byte Order:                              Little Endian
+CPU(s):                                  2
+On-line CPU(s) list:                     0,1
+Vendor ID:                               AuthenticAMD
+Model name:                              AMD EPYC 7B13
+CPU family:                              25
+Model:                                   1
+Thread(s) per core:                      1
+Core(s) per socket:                      2
+Socket(s):                               1
+Stepping:                                0
+BogoMIPS:                                4899.99
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext invpcid_single ssbd ibrs ibpb stibp vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 clzero xsaveerptr arat umip vaes vpclmulqdq rdpid fsrm
+Hypervisor vendor:                       KVM
+Virtualization type:                     full
+L1d cache:                               64 KiB (2 instances)
+L1i cache:                               64 KiB (2 instances)
+L2 cache:                                1 MiB (2 instances)
+L3 cache:                                32 MiB (1 instance)
+NUMA node(s):                            1
+NUMA node0 CPU(s):                       0,1
+Vulnerability Gather data sampling:      Not affected
+Vulnerability Indirect target selection: Not affected
+Vulnerability Itlb multihit:             Not affected
+Vulnerability L1tf:                      Not affected
+Vulnerability Mds:                       Not affected
+Vulnerability Meltdown:                  Not affected
+Vulnerability Mmio stale data:           Not affected
+Vulnerability Reg file data sampling:    Not affected
+Vulnerability Retbleed:                  Not affected
+Vulnerability Spec rstack overflow:      Mitigation; safe RET
+Vulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:                Mitigation; Retpolines; IBPB conditional; IBRS_FW; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected
+Vulnerability Srbds:                     Not affected
+Vulnerability Tsa:                       Mitigation; Clear CPU buffers
+Vulnerability Tsx async abort:           Not affected
+Vulnerability Vmscape:                   Not affected
+
+===== cpuinfo =====
+processor	: 0
+vendor_id	: AuthenticAMD
+cpu family	: 25
+model		: 1
+model name	: AMD EPYC 7B13
+stepping	: 0
+microcode	: 0xffffffff
+cpu MHz		: 2449.998
+cache size	: 512 KB
+physical id	: 0
+siblings	: 2
+core id		: 0
+cpu cores	: 2
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext invpcid_single ssbd ibrs ibpb stibp vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 clzero xsaveerptr arat umip vaes vpclmulqdq rdpid fsrm
+bugs		: sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass srso ibpb_no_ret tsa
+bogomips	: 4899.99
+TLB size	: 2560 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 48 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: AuthenticAMD
+cpu family	: 25
+model		: 1
+model name	: AMD EPYC 7B13
+stepping	: 0
+microcode	: 0xffffffff
+cpu MHz		: 2449.998
+cache size	: 512 KB
+physical id	: 0
+siblings	: 2
+core id		: 1
+cpu cores	: 2
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext invpcid_single ssbd ibrs ibpb stibp vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 clzero xsaveerptr arat umip vaes vpclmulqdq rdpid fsrm
+bugs		: sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass srso ibpb_no_ret tsa
+bogomips	: 4899.99
+TLB size	: 2560 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 48 bits physical, 48 bits virtual
+power management:
+
+
+===== meminfo =====
+MemTotal:        8141516 kB
+MemFree:         7688548 kB
+MemAvailable:    7659752 kB
+Buffers:            2380 kB
+Cached:           135300 kB
+SwapCached:            0 kB
+Active:            73312 kB
+Inactive:         172156 kB
+Active(anon):        340 kB
+Inactive(anon):   107972 kB
+Active(file):      72972 kB
+Inactive(file):    64184 kB
+Unevictable:           0 kB
+Mlocked:               0 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Dirty:               104 kB
+Writeback:             0 kB
+AnonPages:        107868 kB
+Mapped:            44188 kB
+Shmem:               464 kB
+KReclaimable:      77812 kB
+Slab:             105712 kB
+SReclaimable:      77812 kB
+SUnreclaim:        27900 kB
+KernelStack:        1968 kB
+PageTables:         1992 kB
+SecPageTables:         0 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     4070756 kB
+Committed_AS:     483212 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:        9688 kB
+VmallocChunk:          0 kB
+Percpu:              872 kB
+AnonHugePages:     49152 kB
+ShmemHugePages:        0 kB
+ShmemPmdMapped:        0 kB
+FileHugePages:         0 kB
+FilePmdMapped:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+Hugetlb:               0 kB
+DirectMap4k:       74552 kB
+DirectMap2M:     5165056 kB
+DirectMap1G:     5242880 kB
+
+===== disk_usage =====
+Filesystem      Size  Used Avail Use% Mounted on
+udev            3.9G     0  3.9G   0% /dev
+tmpfs           796M  464K  795M   1% /run
+/dev/sda1        20G  5.9G   13G  32% /
+tmpfs           3.9G     0  3.9G   0% /dev/shm
+tmpfs           5.0M     0  5.0M   0% /run/lock
+/dev/sda15      124M   12M  113M  10% /boot/efi
+tmpfs           796M     0  796M   0% /run/user/1000
+
+===== python_version =====
+Python 3.11.15
+
+===== pip_freeze =====
+certifi==2026.4.22
+charset-normalizer==3.4.7
+coloredlogs==15.0.1
+filelock==3.29.0
+flatbuffers==25.12.19
+fsspec==2026.3.0
+huggingface-hub==0.30.2
+humanfriendly==10.0
+idna==3.13
+inquirerpy==0.3.4
+mpmath==1.3.0
+numpy==1.26.4
+onnx==1.16.1
+onnxruntime==1.20.0
+packaging @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_packaging_1777103621/work
+pfzy==0.3.4
+prompt_toolkit==3.0.52
+protobuf==7.34.1
+PyYAML==6.0.3
+requests==2.33.1
+sympy==1.14.0
+tqdm==4.67.3
+typing_extensions==4.15.0
+urllib3==2.6.3
+wcwidth==0.6.0
