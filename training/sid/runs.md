@@ -8,6 +8,7 @@
 | Run Four | RandomForestRegressor | all features | 0.1 | test | 0.212869 | - | 23.957477 | - | - | - | - | - | - | - | - | 0.772145 | 0.906019 | 0.960015 | 0.976028 |
 | Run Five | MLP | all features | 0.1 | test | 0.210124 | 180.000830 | 23.9345 | 0.029034 | 0.213476 | 0.404748 | 2.903400 | 21.347600 | 40.474800 | 1.029510 | 1.246257 | 0.794908 | 0.915654 | 0.966764 | 0.977983 |
 | Run Six | MLP | all features | 0.1 (all splits) | test | 0.182711 | 107.552799 | 22.6258 | 0.028654 | 0.191106 | 0.327739 | 2.865400 | 19.110600 | 32.773900 | 1.028976 | 1.212967 | 0.816787 | 0.929560 | 0.974279 | 0.986750 |
+| Run Seven | MLP | all features | 0.1 | test | 0.184062 | 108.205227 | 22.1019 | 0.028154 | 0.193186 | 0.356171 | 2.815400 | 19.318600 | 35.617100 | 1.028566 | 1.219061 | 0.812451 | 0.924981 | 0.968872 | 0.983583 |
 
 # Notes
 
@@ -37,4 +38,4 @@ Achieved 76.1% with 1000 epochs using FiLM-style model, no CV dropout with all f
 
 Did not achieve any improvement by reducing all splits CV dropout to 0.05.
 
-(Run 7) Did not achieve any improvement by using a simple one-tower MLP model.
+(Run 7)Got a 81.2% score with 0.1 CV dropout for all splits and all features for 2000 epochs with a simple one-tower MLP. No improvement after ~1000 epochs.
