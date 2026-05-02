@@ -9,3 +9,4 @@ __pycache__/
 inference/logs/setup_inference_env.log
 .DS_Store
 training/*.csv
+*.csv

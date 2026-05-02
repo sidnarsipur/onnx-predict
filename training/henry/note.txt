@@ -5,3 +5,38 @@ Given a target machine and an ONNX model, we want to predict its inference time 
 We are focusing on CPU performance on Linux x86 machines only due to our time constraint
 
 Collected information about node types/counts, tensor sizes, etc. from each model. We also have static info about machine core count, cache size, ram, etc.
+
+for training analysis, use the function below:
+def latency_metrics_from_log(y_log_true, y_log_pred):
+    true_ms = np.exp(y_log_true)
+    pred_ms = np.exp(y_log_pred)
+
+    error_ms = pred_ms - true_ms
+    rel_err = np.abs(error_ms) / true_ms
+    ratio_err = np.maximum(pred_ms / true_ms, true_ms / pred_ms)
+
+    rmse_log = np.sqrt(mean_squared_error(y_log_true, y_log_pred))
+    rmse_ms = np.sqrt(np.mean(error_ms ** 2))
+    rmse_percent = np.sqrt(np.mean(((error_ms / true_ms) * 100) ** 2))
+
+    return {
+        "rmse_log": rmse_log,
+        "rmse_ms": rmse_ms,
+        "rmse_percent": rmse_percent,
+
+        "median_relative_error": np.median(rel_err),
+        "p90_relative_error": np.percentile(rel_err, 90),
+        "p95_relative_error": np.percentile(rel_err, 95),
+
+        "median_percent_error": np.median(rel_err) * 100,
+        "p90_percent_error": np.percentile(rel_err, 90) * 100,
+        "p95_percent_error": np.percentile(rel_err, 95) * 100,
+
+        "median_ratio_error": np.median(ratio_err),
+        "p90_ratio_error": np.percentile(ratio_err, 90),
+
+        "within_10pct": np.mean(rel_err <= 0.10),
+        "within_25pct": np.mean(rel_err <= 0.25),
+        "within_50pct": np.mean(rel_err <= 0.50),
+        "within_2x": np.mean(ratio_err <= 2.0),
+    }
