@@ -2,7 +2,7 @@
 
 This was a course project for [ECE 208: The Art of Machine Learning](https://hajim.rochester.edu/ece/sites/zduan/teaching/ece408/index.html) at the University of Rochester.
 
-The project trains machine learning models to predict ONNX Runtime CPU inference latency for ONNX models on x86 Linux machines.
+The project trains machine learning models to predict ONNX Runtime inference latency for models on x86 Linux machines.
 
 # Structure
 
