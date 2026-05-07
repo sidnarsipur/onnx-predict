@@ -2,23 +2,25 @@
 
 This was a course project for [ECE 208: The Art of Machine Learning](https://hajim.rochester.edu/ece/sites/zduan/teaching/ece408/index.html) at the University of Rochester.
 
-The project involves training a series of machine learning model to predict the latency of ONNX Models on x86 Linux machine using the ONNX Runtime CPU Provider.
+The project trains machine learning models to predict ONNX Runtime CPU inference latency for ONNX models on x86 Linux machines.
 
 # Structure
 
-- data_collection: code to download ONNX models from the ONNX Model Zoo and collect static features
-- inference: run slurm jobs or python script to collect inference data
-- training: scripts that were used to train models
-- tool: python script that performs inference and predicts latency given an ONNX Model
+- data_collection: Downloads ONNX models and extracts static graph features.
+- inference: Runs ONNX Runtime latency benchmarks locally or through Slurm jobs.
+- training: Builds datasets and trains latency prediction models.
+- tool: Predicts ONNX Runtime latency for a local ONNX model using the trained checkpoint.
+
+# Hugging Face Resources
+
+- Dataset: https://huggingface.co/datasets/sidnarsipur/onnx-inference
+- Trained model: https://huggingface.co/sidnarsipur/onnx-predict
 
 # Requirements
 
 - Python 3.12 or newer
-- A local ONNX model file
-- The trained latency model checkpoint. The tool downloads `tool/model.pt` from Hugging Face on first run if it is missing.
 - Python packages:
   - `numpy`
-  - `pandas`
   - `torch`
   - `scikit-learn`
   - `onnx`
@@ -37,7 +39,8 @@ Run the latency predictor from the repo root:
   --l2-cache-kb 512 \
   --base-clock-mhz 2450 \
   --num-cores 16 \
-  --memory-bandwidth-gbs 205
+  --memory-bandwidth-gbs 205 \
+  --memory-mb 65536
 ```
 
 The tool creates ONNX Runtime optimization variants for the input model and predicts `average_ms` for each variant:
@@ -59,21 +62,23 @@ To predict only one or more specific variants, repeat `--variant`:
   --l2-cache-kb 1280 \
   --base-clock-mhz 2200 \
   --num-cores 8 \
-  --memory-bandwidth-gbs 102
+  --memory-bandwidth-gbs 102 \
+  --memory-mb 32768
 ```
 
 If a hardware argument is omitted, the script will prompt for it interactively.
 
-By default, the tool also reports a simple confidence label based on similar rows in the held-out training data. Disable that extra lookup with:
+Use `--json` for machine-readable output:
 
 ```bash
 ./tool/predict_latency.py path/to/model.onnx \
-  --no-confidence \
+  --json \
   --cpu-provider amd \
   --l1d-cache-kb 32 \
   --l1i-cache-kb 32 \
   --l2-cache-kb 512 \
   --base-clock-mhz 2450 \
   --num-cores 16 \
-  --memory-bandwidth-gbs 205
+  --memory-bandwidth-gbs 205 \
+  --memory-mb 65536
 ```
