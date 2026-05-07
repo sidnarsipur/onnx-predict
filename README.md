@@ -4,6 +4,14 @@ This was a course project for [ECE 208: The Art of Machine Learning](https://haj
 
 The project trains machine learning models to predict ONNX Runtime inference latency for models on x86 Linux machines.
 
+# About
+
+We built a custom dataset by collecting inference timing data and graph-level features from more than 2,300 ONNX models hosted in the [ONNX Model Zoo](https://huggingface.co/onnxmodelzoo/models).
+
+Using this dataset, we trained and evaluated three model types: XGBoost, RandomForestRegressor, and a neural network. The neural network was selected as the final model. Additional details about the model architecture and training process are in the project report.
+
+We also a provide a CLI-based tool to use this model for predicting the latency of any ONNX Model. 
+
 # Structure
 
 - data_collection: Downloads ONNX models and extracts static graph features.
@@ -26,8 +34,9 @@ The project trains machine learning models to predict ONNX Runtime inference lat
   - `onnx`
   - `onnxruntime`
 
-
 # Running the Tool
+
+Note: The model was trained with ONNX Opset 21 and may be innacurate for older opsets. The tool provides a confidence label (high, medium, low) based on within-10% accuracy of similar models on the held-out test set.
 
 Run the latency predictor from the repo root:
 
