@@ -6,6 +6,7 @@ import argparse
 import json
 import sys
 import tempfile
+import urllib.request
 import warnings
 from pathlib import Path
 from typing import Any
@@ -37,6 +38,7 @@ from onnx_node_metrics import collect_model_row
 TARGET_OPSET = 21
 BYTES_PER_MB = 1024 * 1024
 DEFAULT_CHECKPOINT = Path(__file__).resolve().parent / "model.pt"
+DEFAULT_CHECKPOINT_URL = "https://huggingface.co/sidnarsipur/onnx-predict/resolve/main/model.pt"
 DEFAULT_CALIBRATION_DATA = REPO_ROOT / "training" / "test_set.csv"
 OPTIMIZATION_LEVELS = {
     "disable_all": ort.GraphOptimizationLevel.ORT_DISABLE_ALL,
@@ -137,7 +139,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--checkpoint",
         default=str(DEFAULT_CHECKPOINT),
-        help="Path to model.pt generated from 13.ipynb.",
+        help="Path to the latency checkpoint. The default downloads from Hugging Face if missing.",
     )
     parser.add_argument(
         "--variant",
@@ -150,7 +152,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--l2-cache-kb", type=float)
     parser.add_argument("--base-clock-mhz", type=float)
     parser.add_argument("--num-cores", type=float)
-    parser.add_argument("--memory-bandwith-gbs", type=float)
+    parser.add_argument("--memory-bandwidth-gbs", type=float)
     parser.add_argument("--cpu-provider", choices=sorted(CPU_PROVIDER_MAP))
     parser.add_argument(
         "--calibration-data",
@@ -171,6 +173,26 @@ def load_checkpoint(path: Path) -> dict[str, Any]:
         return torch.load(path, map_location="cpu", weights_only=False)
     except TypeError:
         return torch.load(path, map_location="cpu")
+
+
+def ensure_checkpoint(path: Path, is_default: bool) -> bool:
+    if path.exists():
+        return True
+    if not is_default:
+        print(f"Checkpoint not found: {path}", file=sys.stderr)
+        return False
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path = path.with_suffix(path.suffix + ".download")
+    print(f"Downloading checkpoint to {path}...", file=sys.stderr)
+    try:
+        urllib.request.urlretrieve(DEFAULT_CHECKPOINT_URL, temp_path)
+        temp_path.replace(path)
+    except Exception as exc:
+        temp_path.unlink(missing_ok=True)
+        print(f"Failed to download checkpoint from {DEFAULT_CHECKPOINT_URL}: {exc}", file=sys.stderr)
+        return False
+    return True
 
 
 def load_model(model_path: Path) -> onnx.ModelProto:
@@ -280,10 +302,10 @@ def hardware_values(args: argparse.Namespace) -> dict[str, float]:
         "l2_cache_kb": prompt_float("l2_cache_kb", "L2 cache KB", args.l2_cache_kb),
         "base_clock_mhz": prompt_float("base_clock_mhz", "Base clock MHz", args.base_clock_mhz),
         "num_cores": prompt_float("num_cores", "Number of cores/threads", args.num_cores),
-        "memory_bandwith_gbs": prompt_float(
-            "memory_bandwith_gbs",
+        "memory_bandwidth_gbs": prompt_float(
+            "memory_bandwidth_gbs",
             "Memory bandwidth GB/s",
-            args.memory_bandwith_gbs,
+            args.memory_bandwidth_gbs,
         ),
         "cpu_provider": provider,
         "cpu_provider_binary": CPU_PROVIDER_MAP[provider],
@@ -556,8 +578,8 @@ def main() -> int:
     if model_path.suffix.lower() != ".onnx":
         print(f"Expected an .onnx file, got: {model_path}", file=sys.stderr)
         return 1
-    if not checkpoint_path.exists():
-        print(f"Checkpoint not found: {checkpoint_path}", file=sys.stderr)
+    is_default_checkpoint = checkpoint_path.resolve() == DEFAULT_CHECKPOINT.resolve()
+    if not ensure_checkpoint(checkpoint_path, is_default_checkpoint):
         return 1
 
     checkpoint = load_checkpoint(checkpoint_path)
