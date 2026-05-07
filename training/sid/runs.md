@@ -17,6 +17,8 @@
 | Run Thirteen | MLP | all features | 0.1 (all splits) | test | 0.193490 | 115.915838 | 30.038800 | 0.020046 | 0.133075 | 0.317705 | 2.004600 | 13.307500 | 31.770500 | 1.020287 | 1.142147 | 0.875633 | 0.938572 | 0.968287 | 0.983583 |
 | Run Fourteen | MLP | all features | 0.1 (all splits) | test | 0.190213 | 115.071403 | 29.258100 | 0.030396 | 0.138393 | 0.286489 | 3.039600 | 13.839300 | 28.648900 | 1.031112 | 1.150090 | 0.857463 | 0.944174 | 0.970333 | 0.984704 |
 | Run Fifteen | MLP | all features | 0.1 (all splits) | test | 0.204118 | 132.463814 | 28.653100 | 0.027948 | 0.141348 | 0.310609 | 2.794800 | 14.134800 | 31.060900 | 1.028575 | 1.153478 | 0.864721 | 0.939400 | 0.967654 | 0.982609 |
+| Run Seventeen | MLP | all features | 0.1 (all splits) | test | 0.190884 | 114.126964 | 30.062900 | 0.023726 | 0.132255 | 0.299283 | 2.372600 | 13.225500 | 29.928300 | 1.023944 | 1.141277 | 0.873051 | 0.942128 | 0.969067 | 0.984168 |
+| Run Eighteen | MLP | all features | 0.1 (all splits) | test | 0.207320 | 121.453052 | 27.219500 | 0.035545 | 0.175332 | 0.329398 | 3.554500 | 17.533200 | 32.939800 | 1.036177 | 1.192177 | 0.809139 | 0.931947 | 0.968823 | 0.982707 |
 
 # Notes
 
@@ -63,3 +65,7 @@ Replicated Run 13 without log scaling of features; perfomance was much worse.
 (Run 14) Same base-feature gated FiLM setup as Run 13 with log scaling restored and checkpoint selection prioritized for within-25%; within-25%, rmse_log, rmse_ms, and rmse_percent improved over Run 13, while within-10% dropped.
 
 (Run 15) Composite checkpoint selection improved rmse_percent over Runs 13 and 14, but hurt rmse_log, rmse_ms, within-25%, and within-2x; this does not look like a better overall direction.
+
+(Run 17) New MLP run was close to Run 13 on within-10% with slightly better rmse_log, rmse_ms, p90 error, and within-25%.
+
+(Run 18) New MLP run improved rmse_percent over recent MLP runs, but within-10%, rmse_log, p90 error, and within-25% were worse.
