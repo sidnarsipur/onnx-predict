@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Split training_dataset.csv into train/test/val CSVs."""
 
 from __future__ import annotations
 

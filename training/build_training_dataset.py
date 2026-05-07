@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Build a training dataset by joining node counts with inference run results."""
 
 from __future__ import annotations
 
@@ -37,8 +36,6 @@ DROP_INFERENCE_COLUMNS = {
     "error",
 }
 
-# Decimal bytes/sec. Values are derived from CPU model, memory generation, memory
-# transfer rate, channel count, and socket count observed in artifacts.txt.
 PER_SOCKET_MEMORY_BANDWIDTH = {
     "INTEL(R) XEON(R) PLATINUM 8568Y+": 8 * 5600 * 1_000_000 * 8,
     "AMD EPYC 7B13": 8 * 3200 * 1_000_000 * 8,

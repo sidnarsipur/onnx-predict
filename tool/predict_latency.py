@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Predict ONNX Runtime latency for local ONNX model variants."""
 
 from __future__ import annotations
 
@@ -32,7 +31,7 @@ DATA_COLLECTION_DIR = REPO_ROOT / "data_collection"
 if str(DATA_COLLECTION_DIR) not in sys.path:
     sys.path.insert(0, str(DATA_COLLECTION_DIR))
 
-from onnx_node_metrics import collect_model_row  # noqa: E402
+from onnx_node_metrics import collect_model_row 
 
 
 TARGET_OPSET = 21
