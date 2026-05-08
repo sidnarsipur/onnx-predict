@@ -92,7 +92,7 @@ Use `--json` for machine-readable output:
 
 # Citation 
 
-If you use this any part of this work, please cite it as:
+If you use any part of this work, please cite it as:
 
 ```bibtex
 @misc{narsipurliu2026onnxpredict,
