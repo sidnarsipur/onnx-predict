@@ -126,7 +126,7 @@ def parse_args() -> argparse.Namespace:
 def download_checkpoint(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temp_path = path.with_suffix(path.suffix + ".download")
-    print(f"Downloading Run 17 checkpoint to {path}...", file=sys.stderr)
+    print(f"Downloading neural network checkpoint to {path}...", file=sys.stderr)
     try:
         urllib.request.urlretrieve(DEFAULT_CHECKPOINT_URL, temp_path)
         temp_path.replace(path)
