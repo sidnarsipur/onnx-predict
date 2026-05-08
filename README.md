@@ -1,4 +1,4 @@
-# ONNX-Predict: Predict the latency of ONNX Models using static features
+# ONNX-Predict: Predicting the latency of ONNX Models using static features
 
 This was a course project for [ECE 208: The Art of Machine Learning](https://hajim.rochester.edu/ece/sites/zduan/teaching/ece408/index.html) at the University of Rochester.
 
