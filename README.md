@@ -91,3 +91,17 @@ Use `--json` for machine-readable output:
   --memory-bandwidth-gbs 205 \
   --memory-mb 65536
 ```
+
+# Citation 
+
+If you use this any part of this work, please cite it as:
+
+```bibtex
+@misc{narsipurliu2026onnxpredict,
+  author       = {Narsipur, Sid and Liu, Henry},
+  title        = {{ONNX-Predict}: Predict the Latency of ONNX Models Using Static Features},
+  year         = {2026},
+  institution  = {Department of Computer Science, University of Rochester},
+  howpublished = {\url{https://github.com/sidnarsipur/onnx-predict}},
+  note         = {GitHub repository}
+}
