@@ -36,8 +36,6 @@ We also a provide a CLI-based tool to use this model for predicting the latency 
 
 # Running the Tool
 
-Note: The model was trained with ONNX Opset 21 and may be innacurate for older opsets. The tool provides a confidence label (high, medium, low) based on within-10% accuracy of similar models on the held-out test set.
-
 Run the latency predictor from the repo root:
 
 ```bash
