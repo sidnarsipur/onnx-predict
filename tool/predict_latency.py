@@ -117,7 +117,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--l2-cache-kb", type=float)
     parser.add_argument("--base-clock-mhz", type=float)
     parser.add_argument("--num-cores", type=float)
-    parser.add_argument("--memory-bandwith-gbs", type=float)
+    parser.add_argument("--memory-bandwidth-gbs", type=float)
     parser.add_argument("--memory-mb", type=float)
     parser.add_argument("--json", action="store_true", help="Print JSON instead of a table.")
     return parser.parse_args()
@@ -200,7 +200,7 @@ def hardware_features(args: argparse.Namespace) -> dict[str, float]:
         "l2_cache_kb": prompt_float("L2 cache KB", args.l2_cache_kb),
         "base_clock_mhz": prompt_float("Base clock MHz", args.base_clock_mhz),
         "num_cores": prompt_float("Number of cores/threads", args.num_cores),
-        "memory_bandwith_gbs": prompt_float("Memory bandwidth GB/s", args.memory_bandwith_gbs),
+        "memory_bandwith_gbs": prompt_float("Memory bandwidth GB/s", args.memory_bandwidth_gbs),
         "memory_mb": prompt_float("Memory MB", args.memory_mb),
         "cpu_provider_binary": CPU_PROVIDER_MAP[provider],
     }
