@@ -18,6 +18,7 @@ We also a provide a CLI-based tool to use this model for predicting the latency 
 - inference: Runs ONNX Runtime latency benchmarks locally or through Slurm jobs.
 - training: Builds datasets and trains latency prediction models.
 - tool: Predicts ONNX Runtime latency for a local ONNX model using the trained checkpoint.
+- report: Project report and slides
 
 # Hugging Face Resources
 
